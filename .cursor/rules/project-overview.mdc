@@ -1,0 +1,8 @@
+---
+description: Contracts app — password-protected documents, Convex backend, orange glass UI
+alwaysApply: true
+---
+
+# Contracts App
+
+Markdown-in / PDF-out contract tool. Each document has a `documentId` + system password (stored in localStorage). Convex stores content; share links encode the password opaquely in the URL (`?k=`).

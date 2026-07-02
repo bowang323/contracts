@@ -1,0 +1,13 @@
+---
+description: Orange liquid-glass UI — frosted panels, mesh bg, print-safe document insets
+globs: src/**/*.tsx
+alwaysApply: false
+---
+
+# Liquid Glass Design
+
+- App chrome uses `GlassPanel` (`backdrop-blur-xl`, `border-white/20`, orange mesh behind).
+- Primary actions use `--primary` orange CSS tokens, not arbitrary hex colors.
+- Contract editor/preview **body** is solid white paper — no glass or mesh inside the document.
+- Max 3–4 glass surfaces per screen; use `rounded-2xl`+ and `transition-all duration-300` on interactive glass.
+- PDF/print styles exclude blur and transparency.

@@ -1,0 +1,12 @@
+---
+description: Constrained markdown editor — TipTap extensions and storage format
+globs: src/components/editor/**,src/components/preview/**,src/lib/markdown*
+alwaysApply: false
+---
+
+# Contract Editor
+
+- Canonical storage is a **markdown string** in Convex (serialize/deserialize via TipTap).
+- Allowed blocks: H1–H2, paragraph, bold/italic, lists, table, hr, signature placeholders — no images, custom colors, or free fonts.
+- Preview uses `react-markdown` + `remark-gfm`; document styles use `contract-prose`, separate from glass UI.
+- Autosave debounce ~500ms; save status via sonner toast.

@@ -1,0 +1,271 @@
+/**
+ * Safari / WebKit compatibility fixes for app chrome (sidebar, glass, buttons).
+ * Activated when `is-safari` is on <html> (see main.tsx).
+ */
+
+.is-safari,
+.is-safari body,
+.is-safari #root {
+  min-height: 100vh;
+  min-height: 100svh;
+  min-height: -webkit-fill-available;
+}
+
+.is-safari [data-slot="sidebar-wrapper"] {
+  min-height: 100vh;
+  min-height: 100svh;
+  min-height: -webkit-fill-available;
+}
+
+.is-safari [data-slot="sidebar-wrapper"] > .dark {
+  height: 100vh;
+  height: 100svh;
+  height: -webkit-fill-available;
+  max-height: -webkit-fill-available;
+}
+
+.is-safari [data-slot="sidebar-container"] {
+  height: 100vh;
+  height: 100svh;
+  height: -webkit-fill-available;
+  max-height: -webkit-fill-available;
+  width: var(--sidebar-width, 16rem);
+}
+
+.is-safari [data-slot="sidebar-gap"] {
+  width: var(--sidebar-width, 16rem);
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .is-safari [data-slot="sidebar"][data-state="expanded"] {
+    display: block !important;
+  }
+
+  .is-safari [data-slot="sidebar"][data-state="expanded"] [data-slot="sidebar-container"] {
+    display: flex !important;
+    left: 0 !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    visibility: visible !important;
+    z-index: 40;
+  }
+}
+
+.is-safari [data-slot="sidebar-inset"] {
+  min-height: 0;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+/*
+ * Liquid glass — frosted translucency + blur (not opaque panels).
+ * WebKit needs -webkit-backdrop-filter and a light translucent tint.
+ */
+.is-safari .glass-surface {
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  isolation: isolate;
+  background-color: rgba(255, 255, 255, 0.07) !important;
+  border-color: rgba(255, 255, 255, 0.22) !important;
+}
+
+.is-safari .glass-surface[data-glass="sidebar"] {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  box-shadow: 0 8px 32px rgba(234, 88, 12, 0.15);
+}
+
+.is-safari .glass-surface[data-glass="card"],
+.is-safari .glass-surface[data-glass="floating"] {
+  background-color: rgba(255, 255, 255, 0.09) !important;
+}
+
+.is-safari .glass-surface[data-glass="toolbar"] {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+.is-safari .safari-sticky-blur {
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  background-color: rgba(28, 10, 0, 0.45) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Dialog overlay glass */
+.is-safari [data-slot="dialog-overlay"] {
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  background-color: rgba(0, 0, 0, 0.35) !important;
+}
+
+.is-safari [data-slot="dialog-content"] {
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  backdrop-filter: blur(20px) saturate(150%);
+  background-color: rgba(28, 10, 0, 0.82) !important;
+}
+
+/* Copyable code blocks */
+.is-safari .code-panel {
+  display: block;
+  -webkit-overflow-scrolling: touch;
+  overflow: auto;
+  min-height: 12rem;
+  height: auto;
+  max-height: min(50vh, 24rem);
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.is-safari .code-panel__code {
+  display: block;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Markdown source editor textarea */
+.is-safari .markdown-source-shell {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.is-safari .markdown-source-input {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  flex: 1 1 auto;
+  min-height: 12rem;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  resize: none;
+}
+
+/* Multi-column grids */
+.is-safari .responsive-2-col-grid {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .is-safari .responsive-2-col-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+.is-safari .responsive-2-col-grid > * {
+  min-width: 0;
+  width: 100%;
+}
+
+.is-safari .page-chrome-grid {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) !important;
+  column-gap: 0.5rem;
+  width: 100%;
+}
+
+.is-safari .page-chrome-grid .page-slot {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Native & component buttons */
+.is-safari button,
+.is-safari [data-slot="button"],
+.is-safari [role="radio"] {
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  line-height: normal;
+}
+
+.is-safari [data-slot="button"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+}
+
+.is-safari [data-slot="button"]:active:not([aria-haspopup="true"]) {
+  transform: none;
+}
+
+.is-safari [data-slot="button"] svg {
+  flex-shrink: 0;
+  display: block;
+}
+
+.is-safari [data-slot="sidebar-header"] [data-slot="button"].w-full {
+  width: 100%;
+}
+
+.is-safari [data-slot="scroll-area-viewport"] {
+  -webkit-overflow-scrolling: touch;
+  overflow: auto;
+}
+
+.is-safari [role="radiogroup"] [role="radio"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  margin: 0;
+}
+
+.is-safari [role="radiogroup"] {
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  backdrop-filter: blur(12px) saturate(150%);
+}
+
+.is-safari [data-slot="input"] {
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0.5rem;
+}
+
+.is-safari .safari-sidebar-fab {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 50;
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  backdrop-filter: blur(12px) saturate(150%);
+}
+
+/* Flex dialogs (AI skill) — Safari needs explicit flex + min-height */
+.is-safari [data-slot="dialog-content"].flex {
+  display: flex !important;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.is-safari [data-slot="dialog-content"].flex > .min-h-\[min\(40vh\,20rem\)\] {
+  flex: 1 1 auto;
+  min-height: min(40vh, 20rem);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .glass-surface {
+    background-color: rgba(28, 10, 0, 0.88) !important;
+  }
+
+  .glass-surface[data-glass="sidebar"] {
+    background-color: rgba(28, 10, 0, 0.92) !important;
+  }
+
+  .safari-sticky-blur {
+    background-color: rgba(28, 10, 0, 0.92) !important;
+  }
+}

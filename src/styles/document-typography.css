@@ -1,0 +1,69 @@
+/**
+ * Official document typography (preview, editor, print export).
+ * Latin and CJK glyphs resolve via ordered font-family stacks.
+ */
+.paginated-paper-canvas {
+  --font-doc-body:
+    "Times New Roman", Times, "Songti SC", "Noto Serif SC", "SimSun", "NSimSun",
+    "宋体", serif;
+  --font-doc-body-italic:
+    "Times New Roman", Times, "KaiTi", "Kaiti SC", "STKaiti", "楷体", serif;
+  --font-doc-red-title:
+    Georgia, "Heiti SC", "SimHei", "STHeiti", "Microsoft YaHei", "PingFang SC",
+    "黑体", sans-serif;
+
+  font-family: var(--font-doc-body);
+}
+
+.contract-prose,
+.contract-prose-editor {
+  font-family: var(--font-doc-body);
+}
+
+.page-header,
+.page-footer {
+  font-family: var(--font-doc-body);
+}
+
+.page-header .page-slot,
+.page-footer .page-slot {
+  font-size: 13px;
+  line-height: 1.35;
+  color: #000;
+}
+
+.page-red-title {
+  font-family: var(--font-doc-red-title);
+  min-height: 3.75rem;
+  padding-bottom: 0.25rem;
+}
+
+.page-red-title-text {
+  margin: 0;
+  text-align: center;
+  font-size: 2rem; /* 32px — larger than the previous 26px */
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.025em;
+  color: #dc2626;
+  transform: scaleY(1.5);
+  transform-origin: center top;
+  padding-bottom: 0.35em;
+}
+
+.page-red-title-line {
+  margin-top: 0.875rem;
+  border-bottom: 2px solid #dc2626;
+}
+
+.page-red-title p,
+.page-red-title-text {
+  font-family: var(--font-doc-red-title);
+}
+
+.contract-prose :is(em, i),
+.contract-prose-editor :is(em, i) {
+  font-family: var(--font-doc-body-italic);
+  font-style: italic;
+  font-synthesis: none;
+}

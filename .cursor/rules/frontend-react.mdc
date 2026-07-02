@@ -1,0 +1,13 @@
+---
+description: React + shadcn + Tailwind patterns for Contracts app
+globs: src/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Frontend React
+
+- Functional components; reusable logic in `src/hooks/` (e.g. `useDebouncedSave`).
+- Use shadcn primitives from `@/components/ui`; extend via `cn()`, avoid forking shadcn files.
+- Convex: `useQuery`, `useMutation`, `usePaginatedQuery` from `convex/react` — no raw fetch to Convex.
+- Routes: `/` dashboard, `/contracts/:id` editor.
+- Strict TypeScript; no `any`.
