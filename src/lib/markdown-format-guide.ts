@@ -60,6 +60,8 @@ const guideEn: GuideSection[] = [
       "Bullet and numbered lists",
       "Tables (GitHub-flavored)",
       "Horizontal rules (---)",
+      "Inline code with `backticks` and fenced blocks with ``` — do not use 4-space indented code blocks",
+      "Intentional spaces and blank lines are preserved when editing in the visual editor",
       "Paragraph alignment — use heading levels 5 and 6 as alignment blocks (same body font and weight as normal text):",
       "  Left (default) — plain paragraph text",
       "  Center — ##### Your text (Markdown h5)",
@@ -112,6 +114,8 @@ const guideZh: GuideSection[] = [
       "无序与有序列表",
       "表格（GFM）",
       "分隔线（---）",
+      "行内代码用 `反引号`，代码块用 ``` 围栏 — 不要用四个空格缩进表示代码",
+      "在可视化编辑器中，有意留出的空格与空行会被保留",
       "段落对齐 — 用五级、六级标题作为对齐块（字号与粗细与正文相同）：",
       "  左对齐（默认）— 普通段落",
       "  居中 — ##### 你的文字（Markdown h5）",
@@ -185,6 +189,7 @@ Escape pipe \\| inside cell values.
 - Bullet (\`-\`) and numbered (\`1.\`) lists
 - GFM tables
 - \`---\` horizontal rule
+- Inline code: \`like this\`. Fenced code blocks: \`\`\` ... \`\`\`. **Never** use 4-space indentation for code blocks.
 
 ### Paragraph alignment (body text)
 
@@ -280,6 +285,7 @@ ${TABLE_EXAMPLE}
 - 无序（\`-\`）与有序（\`1.\`）列表
 - GFM 表格
 - \`---\` 分隔线
+- 行内代码：\`反引号\`。围栏代码块：\`\`\` ... \`\`\`。**不要**用四个空格缩进表示代码块。
 
 ### 段落对齐（正文）
 

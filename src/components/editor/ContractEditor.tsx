@@ -42,6 +42,11 @@ import { type PageFormat } from "@/lib/page-format";
 import { EditorShortcuts } from "@/lib/editor-shortcuts";
 import { tooltipWithShortcut } from "@/lib/format-shortcut";
 import { PageFlowExtension } from "@/lib/tiptap-page-flow-extension";
+import {
+  MarkdownIndentedCodeDisabled,
+  ParagraphWithMarkdownWhitespace,
+  TextWithMarkdownWhitespace,
+} from "@/lib/tiptap-markdown-preservation";
 import { initializeEditorPreviewFromMarkdown } from "@/lib/editor-preview-init";
 import { useLanguage } from "@/providers/LanguageProvider";
 import { cn } from "@/lib/utils";
@@ -168,7 +173,12 @@ export function ContractEditor({
         heading: { levels: [1, 2, 5, 6] },
         bulletList: { keepMarks: true },
         orderedList: { keepMarks: true },
+        paragraph: false,
+        text: false,
       }),
+      ParagraphWithMarkdownWhitespace,
+      TextWithMarkdownWhitespace,
+      MarkdownIndentedCodeDisabled,
       TableWithMarkdown.configure({ resizable: false }),
       TableRow,
       TableHeader,
