@@ -54,6 +54,7 @@ type ContractEditorProps = {
   fullMarkdown: string;
   showSourceCode: boolean;
   contentReady: boolean;
+  onPreviewReadyChange?: (ready: boolean) => void;
   onBodyMarkdownChange: (markdown: string) => void;
   onFullMarkdownChange: (markdown: string) => void;
   onPageFormatChange: (format: PageFormat) => void;
@@ -141,6 +142,7 @@ export function ContractEditor({
   fullMarkdown,
   showSourceCode,
   contentReady,
+  onPreviewReadyChange,
   onBodyMarkdownChange,
   onFullMarkdownChange,
   onPageFormatChange,
@@ -151,10 +153,14 @@ export function ContractEditor({
   const [showAiSkill, setShowAiSkill] = useState(false);
   const [showInsertTable, setShowInsertTable] = useState(false);
   const [isPreviewReady, setIsPreviewReady] = useState(false);
-  const [visualLoadKey, setVisualLoadKey] = useState(0);
   const [, setToolbarRevision] = useState(0);
   const contentRef = useRef<HTMLDivElement>(null);
+  const bodyMarkdownRef = useRef(bodyMarkdown);
   const isInitializingRef = useRef(false);
+  const isPreviewReadyRef = useRef(false);
+  const initGenerationRef = useRef(0);
+
+  bodyMarkdownRef.current = bodyMarkdown;
 
   const editor = useEditor({
     extensions: [
@@ -185,7 +191,7 @@ export function ContractEditor({
       },
     },
     onUpdate: ({ editor: currentEditor }) => {
-      if (isInitializingRef.current) return;
+      if (isInitializingRef.current || !isPreviewReadyRef.current) return;
       const storage = currentEditor.storage as unknown as {
         markdown: { getMarkdown: () => string };
       };
@@ -194,37 +200,55 @@ export function ContractEditor({
   });
 
   useEffect(() => {
-    if (!showSourceCode && contentReady) {
-      setVisualLoadKey((key) => key + 1);
-    }
-  }, [documentId, showSourceCode, contentReady]);
+    isPreviewReadyRef.current = isPreviewReady;
+    onPreviewReadyChange?.(isPreviewReady);
+  }, [isPreviewReady, onPreviewReadyChange]);
 
   useEffect(() => {
     if (!editor || showSourceCode || !contentReady) {
-      setIsPreviewReady(showSourceCode);
+      const ready = showSourceCode;
+      setIsPreviewReady(ready);
+      isPreviewReadyRef.current = ready;
+      onPreviewReadyChange?.(ready);
       return;
     }
 
+    const generation = ++initGenerationRef.current;
     let cancelled = false;
     setIsPreviewReady(false);
+    isPreviewReadyRef.current = false;
+    isInitializingRef.current = true;
     editor.setEditable(false);
 
     void (async () => {
-      isInitializingRef.current = true;
-      const snapshotBody = bodyMarkdown;
+      const snapshotBody = bodyMarkdownRef.current;
       try {
         await initializeEditorPreviewFromMarkdown(editor, snapshotBody);
-        if (!cancelled) {
-          setIsPreviewReady(true);
-          editor.setEditable(true);
+        if (
+          cancelled ||
+          generation !== initGenerationRef.current ||
+          editor.isDestroyed
+        ) {
+          return;
         }
+        setIsPreviewReady(true);
+        isPreviewReadyRef.current = true;
+        editor.setEditable(true);
       } catch {
-        if (!cancelled) {
-          setIsPreviewReady(true);
-          editor.setEditable(true);
+        if (
+          cancelled ||
+          generation !== initGenerationRef.current ||
+          editor.isDestroyed
+        ) {
+          return;
         }
+        setIsPreviewReady(true);
+        isPreviewReadyRef.current = true;
+        editor.setEditable(true);
       } finally {
-        isInitializingRef.current = false;
+        if (generation === initGenerationRef.current) {
+          isInitializingRef.current = false;
+        }
       }
     })();
 
@@ -232,7 +256,7 @@ export function ContractEditor({
       cancelled = true;
       editor.setEditable(false);
     };
-  }, [editor, showSourceCode, visualLoadKey, contentReady]);
+  }, [editor, showSourceCode, contentReady, documentId]);
 
   useEffect(() => {
     if (!editor || showSourceCode) return;

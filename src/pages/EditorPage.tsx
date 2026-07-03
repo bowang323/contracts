@@ -54,6 +54,7 @@ export function EditorPage() {
   const [markdown, setMarkdown] = useState<string | null>(null);
   const [awaitingEditTransfer, setAwaitingEditTransfer] = useState(false);
   const [requestingEdit, setRequestingEdit] = useState(false);
+  const [editorPreviewReady, setEditorPreviewReady] = useState(false);
   const hydratedDocumentIdRef = useRef<string | null>(null);
   const prevLockModeRef = useRef<"edit" | "read" | "pending">("pending");
 
@@ -62,6 +63,7 @@ export function EditorPage() {
     prevLockModeRef.current = "pending";
     setMarkdown(null);
     setTitle(null);
+    setEditorPreviewReady(false);
   }, [documentId]);
 
   useEffect(() => {
@@ -198,7 +200,7 @@ export function EditorPage() {
     markdown: resolvedMarkdown,
     updateContract,
     canEdit,
-    contentReady: isContentHydrated,
+    contentReady: isContentHydrated && (!canEdit || editorPreviewReady),
   });
 
   const handleExport = async () => {
@@ -366,6 +368,7 @@ export function EditorPage() {
               fullMarkdown={resolvedMarkdown}
               contentReady={isContentHydrated}
               showSourceCode={showSourceCode}
+              onPreviewReadyChange={setEditorPreviewReady}
               onBodyMarkdownChange={handleBodyMarkdownChange}
               onFullMarkdownChange={setMarkdown}
               onPageFormatChange={handlePageFormatChange}

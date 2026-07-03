@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDebouncedSave } from "@/hooks/useDebouncedSave";
 import { isDocumentSavedLocally } from "@/lib/local-documents";
+import { parseDocumentMarkdown } from "@/lib/page-format";
+
+function markdownBodyIsEmpty(markdown: string): boolean {
+  return parseDocumentMarkdown(markdown).body.trim().length === 0;
+}
 
 export type SaveStatus = "saved" | "saving" | "unsaved" | "error";
 
@@ -113,6 +118,16 @@ export function useContractAutosave({
       }
 
       if (lastChangeAtRef.current === null) {
+        return;
+      }
+
+      if (
+        markdownBodyIsEmpty(payload.markdown) &&
+        !markdownBodyIsEmpty(lastSavedRef.current.markdown)
+      ) {
+        console.warn(
+          "Blocked autosave: refusing to overwrite document body with empty content",
+        );
         return;
       }
 
