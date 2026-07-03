@@ -151,6 +151,20 @@
   @apply text-xl font-semibold mt-6 mb-3;
 }
 
+/* h5/h6 = body-weight alignment blocks (center / right) in markdown */
+.contract-prose h5,
+.contract-prose h6 {
+  @apply mb-3 text-base font-normal leading-relaxed text-neutral-900;
+}
+
+.contract-prose h5 {
+  @apply text-center;
+}
+
+.contract-prose h6 {
+  @apply text-right;
+}
+
 .contract-prose p {
   @apply mb-3;
 }

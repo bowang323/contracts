@@ -60,6 +60,10 @@ const guideEn: GuideSection[] = [
       "Bullet and numbered lists",
       "Tables (GitHub-flavored)",
       "Horizontal rules (---)",
+      "Paragraph alignment — use heading levels 5 and 6 as alignment blocks (same body font and weight as normal text):",
+      "  Left (default) — plain paragraph text",
+      "  Center — ##### Your text (Markdown h5)",
+      "  Right — ###### Your text (Markdown h6)",
     ],
   },
   {
@@ -108,6 +112,10 @@ const guideZh: GuideSection[] = [
       "无序与有序列表",
       "表格（GFM）",
       "分隔线（---）",
+      "段落对齐 — 用五级、六级标题作为对齐块（字号与粗细与正文相同）：",
+      "  左对齐（默认）— 普通段落",
+      "  居中 — ##### 你的文字（Markdown h5）",
+      "  右对齐 — ###### 你的文字（Markdown h6）",
     ],
   },
   {
@@ -178,6 +186,20 @@ Escape pipe \\| inside cell values.
 - GFM tables
 - \`---\` horizontal rule
 
+### Paragraph alignment (body text)
+
+Use **h5** and **h6** as alignment blocks. They render with the same font size and weight as normal paragraphs—not as traditional headings.
+
+| Alignment | Markdown | Example |
+| --- | --- | --- |
+| Left | plain paragraph (no heading prefix) | \`The parties agree as follows.\` |
+| Center | \`#####\` (h5) | \`##### CONFIDENTIAL\` |
+| Right | \`######\` (h6) | \`###### Page 1 of 3\` |
+
+- Do **not** use h3 or h4 for alignment.
+- Each aligned line is its own paragraph block (one \`#####\` or \`######\` line per aligned row).
+- In the visual editor, use the align-left / align-center / align-right toolbar buttons (they write the same Markdown).
+
 Do not use raw HTML in the body.
 
 ## Typography (must match preview)
@@ -204,6 +226,7 @@ Mixed English and Chinese in one paragraph is expected.
 - [ ] All booleans are lowercase true/false
 - [ ] red-title.show=true implies header slots are false/empty
 - [ ] footer.center.mode=page-number when center footer should show page numbers
+- [ ] Center-aligned body lines use \`#####\` (h5); right-aligned use \`######\` (h6); left uses plain paragraphs
 - [ ] Body starts after the table with valid Markdown only
 `;
 }
@@ -258,6 +281,20 @@ ${TABLE_EXAMPLE}
 - GFM 表格
 - \`---\` 分隔线
 
+### 段落对齐（正文）
+
+用 **五级、六级标题** 表示对齐块。显示效果与正文相同字号与粗细，不是传统大标题。
+
+| 对齐 | Markdown | 示例 |
+| --- | --- | --- |
+| 左对齐 | 普通段落（无前缀） | \`双方约定如下。\` |
+| 居中 | \`#####\`（h5） | \`##### 机密文件\` |
+| 右对齐 | \`######\`（h6） | \`###### 第 1 页\` |
+
+- 不要用 h3、h4 做对齐。
+- 每一行对齐单独占一行（一行一个 \`#####\` 或 \`######\`）。
+- 可视化编辑器中可用左/中/右对齐工具栏按钮（写入相同 Markdown）。
+
 正文不要使用原始 HTML。
 
 ## 字体（须与预览一致）
@@ -281,6 +318,7 @@ ${TABLE_EXAMPLE}
 - [ ] 布尔值为小写 true/false
 - [ ] red-title.show=true 时页眉应为 false/空
 - [ ] 居中页码使用 footer.center.mode=page-number
+- [ ] 正文居中行用 \`#####\`（h5），右对齐用 \`######\`（h6），左对齐用普通段落
 - [ ] 表格后仅为合法 Markdown 正文
 `;
 }

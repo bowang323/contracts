@@ -21,6 +21,9 @@ import {
   Sparkles,
   Table as TableIcon,
   Undo2,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GlassPanel } from "@/components/ui/glass-panel";
@@ -156,7 +159,7 @@ export function ContractEditor({
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
-        heading: { levels: [1, 2] },
+        heading: { levels: [1, 2, 5, 6] },
         bulletList: { keepMarks: true },
         orderedList: { keepMarks: true },
       }),
@@ -309,6 +312,27 @@ export function ContractEditor({
           icon: Minus,
           action: () => editor.chain().focus().setHorizontalRule().run(),
           active: false,
+        },
+        {
+          key: "toolAlignLeft",
+          icon: AlignLeft,
+          action: () => editor.chain().focus().setParagraph().run(),
+          active:
+            editor.isActive("paragraph") &&
+            !editor.isActive("heading", { level: 5 }) &&
+            !editor.isActive("heading", { level: 6 }),
+        },
+        {
+          key: "toolAlignCenter",
+          icon: AlignCenter,
+          action: () => editor.chain().focus().setHeading({ level: 5 }).run(),
+          active: editor.isActive("heading", { level: 5 }),
+        },
+        {
+          key: "toolAlignRight",
+          icon: AlignRight,
+          action: () => editor.chain().focus().setHeading({ level: 6 }).run(),
+          active: editor.isActive("heading", { level: 6 }),
         },
       ]
     : [];

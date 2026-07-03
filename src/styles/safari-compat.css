@@ -33,8 +33,23 @@
 }
 
 .is-safari [data-slot="sidebar-gap"] {
-  width: var(--sidebar-width, 16rem);
   flex-shrink: 0;
+  transition: width 200ms ease-linear;
+  width: var(--sidebar-width, 16rem);
+}
+
+.is-safari [data-slot="sidebar"][data-state="collapsed"] > [data-slot="sidebar-gap"] {
+  width: 0 !important;
+  min-width: 0 !important;
+  overflow: hidden;
+}
+
+.is-safari [data-slot="sidebar-inset"] {
+  min-height: 0;
+  min-width: 0;
+  flex: 1 1 0%;
+  width: 100%;
+  max-width: 100%;
 }
 
 @media (min-width: 768px) {
@@ -50,12 +65,6 @@
     visibility: visible !important;
     z-index: 40;
   }
-}
-
-.is-safari [data-slot="sidebar-inset"] {
-  min-height: 0;
-  min-width: 0;
-  flex: 1 1 auto;
 }
 
 /*
@@ -233,15 +242,6 @@
   -webkit-appearance: none;
   appearance: none;
   border-radius: 0.5rem;
-}
-
-.is-safari .safari-sidebar-fab {
-  position: fixed;
-  top: 0.75rem;
-  left: 0.75rem;
-  z-index: 50;
-  -webkit-backdrop-filter: blur(12px) saturate(150%);
-  backdrop-filter: blur(12px) saturate(150%);
 }
 
 /* Flex dialogs (AI skill) — Safari needs explicit flex + min-height */

@@ -8,7 +8,7 @@ import { LocalDocumentList } from "@/components/contracts/LocalDocumentList";
 import { CreateDocumentDialog } from "@/components/documents/CreateDocumentDialog";
 import { LanguageToggle } from "@/components/layout/LanguageToggle";
 import { SidebarHideButton } from "@/components/layout/SidebarHideButton";
-import { SafariSidebarFab } from "@/components/layout/SafariSidebarFab";
+import { AppIcon } from "@/components/layout/AppIcon";
 import { MeshBackground } from "@/components/layout/MeshBackground";
 import { GlassPanel } from "@/components/ui/glass-panel";
 import { Button } from "@/components/ui/button";
@@ -132,10 +132,6 @@ export function AppShell() {
     toast.success(t("removedFromDevice"));
   };
 
-  const isSafari =
-    typeof document !== "undefined" &&
-    document.documentElement.classList.contains("is-safari");
-
   return (
     <SidebarProvider open={sidebarOpen} onOpenChange={setSidebarOpen}>
       <MeshBackground />
@@ -148,13 +144,16 @@ export function AppShell() {
           <GlassPanel variant="sidebar" className="flex h-full min-h-0 flex-col p-3">
             <SidebarHeader className="gap-3 p-0">
               <div className="flex items-center justify-between gap-2">
-                <div className="min-w-0">
-                  <p className="text-xs font-medium uppercase tracking-wider text-primary">
-                    {t("appTagline")}
-                  </p>
-                  <h1 className="text-lg font-semibold text-foreground">
-                    {t("appTitle")}
-                  </h1>
+                <div className="flex min-w-0 items-center gap-2.5">
+                  <AppIcon />
+                  <div className="min-w-0">
+                    <p className="text-xs font-medium uppercase tracking-wider text-primary">
+                      {t("appTagline")}
+                    </p>
+                    <h1 className="text-lg font-semibold text-foreground">
+                      {t("appTitle")}
+                    </h1>
+                  </div>
                 </div>
                 <div className="flex shrink-0 items-center gap-0.5">
                   <LanguageToggle />
@@ -225,7 +224,6 @@ export function AppShell() {
           </GlassPanel>
         </Sidebar>
         <SidebarInset className="relative flex min-h-0 flex-1 flex-col overflow-hidden bg-transparent">
-          {isSafari ? <SafariSidebarFab /> : null}
           <Outlet />
         </SidebarInset>
       </div>
