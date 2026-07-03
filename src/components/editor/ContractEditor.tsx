@@ -20,6 +20,7 @@ import {
   Redo2,
   Sparkles,
   Table as TableIcon,
+  Underline,
   Undo2,
   AlignLeft,
   AlignCenter,
@@ -47,6 +48,7 @@ import {
   ParagraphWithMarkdownWhitespace,
   TextWithMarkdownWhitespace,
 } from "@/lib/tiptap-markdown-preservation";
+import { UnderlineWithMarkdown } from "@/lib/tiptap-underline-markdown";
 import { initializeEditorPreviewFromMarkdown } from "@/lib/editor-preview-init";
 import { useLanguage } from "@/providers/LanguageProvider";
 import { cn } from "@/lib/utils";
@@ -175,9 +177,11 @@ export function ContractEditor({
         orderedList: { keepMarks: true },
         paragraph: false,
         text: false,
+        underline: false,
       }),
       ParagraphWithMarkdownWhitespace,
       TextWithMarkdownWhitespace,
+      UnderlineWithMarkdown,
       MarkdownIndentedCodeDisabled,
       TableWithMarkdown.configure({ resizable: false }),
       TableRow,
@@ -328,6 +332,13 @@ export function ContractEditor({
           action: () => editor.chain().focus().toggleItalic().run(),
           active: editor.isActive("italic"),
           shortcut: "Mod-I",
+        },
+        {
+          key: "toolUnderline",
+          icon: Underline,
+          action: () => editor.chain().focus().toggleUnderline().run(),
+          active: editor.isActive("underline"),
+          shortcut: "Mod-U",
         },
         {
           key: "toolBulletList",

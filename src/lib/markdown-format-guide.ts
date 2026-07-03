@@ -57,6 +57,7 @@ const guideEn: GuideSection[] = [
       "# Heading 1 — centered on the page",
       "## Heading 2",
       "**bold** and *italic* / _italic_",
+      "++underline++ (double plus signs)",
       "Bullet and numbered lists",
       "Tables (GitHub-flavored)",
       "Horizontal rules (---)",
@@ -111,6 +112,7 @@ const guideZh: GuideSection[] = [
       "# 一级标题 — 页面居中",
       "## 二级标题",
       "**粗体** 与 *斜体* / _斜体_",
+      "++下划线++（双加号包裹）",
       "无序与有序列表",
       "表格（GFM）",
       "分隔线（---）",
@@ -186,6 +188,7 @@ Escape pipe \\| inside cell values.
 - \`# Title\` — H1, centered in preview
 - \`## Section\` — H2
 - \`**bold**\`, \`*italic*\` — emphasis
+- \`++underline++\` — underline (double plus signs; combine with bold/italic as needed)
 - Bullet (\`-\`) and numbered (\`1.\`) lists
 - GFM tables
 - \`---\` horizontal rule
@@ -282,6 +285,7 @@ ${TABLE_EXAMPLE}
 - \`# 标题\` — 一级标题，预览居中
 - \`## 小节\` — 二级标题
 - \`**粗体**\`、\`*斜体*\` — 强调
+- \`++下划线++\` — 下划线（双加号；可与粗体/斜体组合）
 - 无序（\`-\`）与有序（\`1.\`）列表
 - GFM 表格
 - \`---\` 分隔线

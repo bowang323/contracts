@@ -1,8 +1,7 @@
 import { useEffect, useRef } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import { GlassPanel } from "@/components/ui/glass-panel";
 import { PaginatedDocumentSurface } from "@/components/editor/PaginatedDocumentSurface";
+import { renderBodyMarkdownHtml } from "@/lib/body-markdown-html";
 import { parseDocumentMarkdown } from "@/lib/page-format";
 import { requestPageFlowReflow } from "@/lib/page-flow-layout-store";
 
@@ -46,20 +45,10 @@ export function ContractPreview({
           contentRevision={contentRevision ?? markdown.length}
           className="h-full min-h-0"
         >
-          <div className="contract-prose contract-prose-preview">
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              components={{
-                table: ({ children, ...props }) => (
-                  <div className="tableWrapper">
-                    <table {...props}>{children}</table>
-                  </div>
-                ),
-              }}
-            >
-              {body}
-            </ReactMarkdown>
-          </div>
+          <div
+            className="contract-prose contract-prose-preview"
+            dangerouslySetInnerHTML={{ __html: renderBodyMarkdownHtml(body) }}
+          />
         </PaginatedDocumentSurface>
       </div>
     </GlassPanel>

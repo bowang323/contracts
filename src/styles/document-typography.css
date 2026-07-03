@@ -67,3 +67,10 @@
   font-style: italic;
   font-synthesis: none;
 }
+
+.contract-prose :is(u, ins),
+.contract-prose-editor :is(u, ins),
+.contract-prose-preview :is(u, ins) {
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
