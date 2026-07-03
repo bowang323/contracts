@@ -10,9 +10,11 @@ permissions:
   pages: write
   id-token: write
 
+# Do not cancel an in-flight Pages deployment — that often yields
+# "Deployment failed, try again later" from deploy-pages.
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -34,6 +36,13 @@ jobs:
           VITE_BASE_PATH: ${{ vars.VITE_BASE_PATH || format('/{0}/', github.event.repository.name) }}
           VITE_SHARE_OBFUSCATION_KEY: ${{ secrets.VITE_SHARE_OBFUSCATION_KEY }}
 
+      - name: Verify build output
+        run: |
+          test -f dist/index.html
+          test -f dist/404.html
+          test -f dist/.nojekyll
+          echo "dist ready ($(du -sh dist | cut -f1))"
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
@@ -44,6 +53,14 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
     steps:
-      - uses: actions/deploy-pages@v4
+      - name: Deploy to GitHub Pages
         id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          timeout: 600000
+          error_count: 10
+          reporting_interval: 10000

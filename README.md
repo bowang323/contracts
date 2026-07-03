@@ -64,6 +64,15 @@ Copy `.env.example` to `.env.local` and set your dev deployment URL (written by 
 
 You can also trigger deploy manually from the **Actions** tab.
 
+### If Pages deploy fails with “Deployment failed, try again later”
+
+The **build** job succeeded (artifact uploaded); this error is from GitHub’s Pages API, not your app code.
+
+1. **Re-run the failed Deploy workflow** — often transient ([actions/deploy-pages#418](https://github.com/actions/deploy-pages/issues/418)).
+2. **Settings → Pages → Build and deployment** — source must be **GitHub Actions** (not “Deploy from a branch”).
+3. **Avoid overlapping deploys** — wait for the current run to finish before pushing again (the workflow uses `cancel-in-progress: false` so deploys are not aborted mid-flight).
+4. Check [GitHub Status](https://www.githubstatus.com/) for Pages incidents.
+
 ### After the first deploy
 
 Your site will be at:

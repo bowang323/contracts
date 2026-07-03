@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "postbuild": "node -e \"require('fs').copyFileSync('dist/index.html','dist/404.html')\"",
+    "postbuild": "cp dist/index.html dist/404.html",
     "lint": "eslint .",
     "typecheck": "tsc -b --noEmit",
     "check": "npm run lint && npm run typecheck",
