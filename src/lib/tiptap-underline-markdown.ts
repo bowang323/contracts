@@ -35,6 +35,7 @@ export const UnderlineWithMarkdown = Underline.extend({
         serialize: {
           open: "++",
           close: "++",
+          mixable: true,
           expelEnclosingWhitespace: true,
         },
         parse: {

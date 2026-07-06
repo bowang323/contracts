@@ -76,8 +76,8 @@ const guideEn: GuideSection[] = [
     ],
     bullets: [
       "Red title — English: Georgia. Chinese: 黑体 (Heiti). Displayed larger with extra vertical emphasis.",
-      "Body text — English: Times New Roman. Chinese: 宋体 (Songti).",
-      "Italic / emphasis (*text*) — English: Times New Roman italic. Chinese: 楷体 (Kaiti), upright (not slanted).",
+      "Body text — English & Chinese: Noto Serif SC (bundled open font).",
+      "Italic / emphasis (*text*) — English: Source Serif 4 italic. Chinese: LXGW WenKai (楷体-style, upright).",
       "Headers and footers use the same body fonts as above.",
     ],
   },
@@ -131,8 +131,8 @@ const guideZh: GuideSection[] = [
     ],
     bullets: [
       "红头标题 — 英文：Georgia。中文：黑体。字号较大并纵向加高显示。",
-      "正文 — 英文：Times New Roman。中文：宋体。",
-      "斜体 / 强调（*文字*）— 英文：Times New Roman 斜体。中文：楷体（不倾斜）。",
+      "正文 — 英文与中文：Noto Serif SC（内置开源字体）。",
+      "斜体 / 强调（*文字*）— 英文：Source Serif 4 斜体。中文：霞鹜文楷 LXGW WenKai（不倾斜）。",
       "页眉、页脚与正文使用相同正文字体规则。",
     ],
   },
@@ -217,8 +217,8 @@ When describing formatting to the user, follow these rendering rules:
 | Region | English | Chinese |
 | --- | --- | --- |
 | Red title | Georgia | 黑体 (Heiti) |
-| Body | Times New Roman | 宋体 (Songti) |
-| Italic / emphasis | Times New Roman *italic* | 楷体 (Kaiti), upright |
+| Body | Noto Serif SC | Noto Serif SC |
+| Italic / emphasis | Source Serif 4 *italic* | LXGW WenKai, upright |
 
 Mixed English and Chinese in one paragraph is expected.
 
@@ -312,8 +312,8 @@ ${TABLE_EXAMPLE}
 | 区域 | 英文 | 中文 |
 | --- | --- | --- |
 | 红头标题 | Georgia | 黑体 |
-| 正文 | Times New Roman | 宋体 |
-| 斜体 / 强调 | Times New Roman 斜体 | 楷体（不倾斜） |
+| 正文 | Noto Serif SC | Noto Serif SC |
+| 斜体 / 强调 | Source Serif 4 斜体 | 霞鹜文楷（不倾斜） |
 
 同一段落可混排中英文。
 

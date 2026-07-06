@@ -1,16 +1,15 @@
 /**
  * Official document typography (preview, editor, print export).
- * Latin and CJK glyphs resolve via ordered font-family stacks.
+ * Bundled open fonts first; system fallbacks only if a glyph is missing.
  */
 .paginated-paper-canvas {
   --font-doc-body:
-    "Times New Roman", Times, "Songti SC", "Noto Serif SC", "SimSun", "NSimSun",
-    "宋体", serif;
+    "Noto Serif SC Variable", "Noto Serif SC", "Source Serif 4 Variable",
+    "Source Serif 4", serif;
   --font-doc-body-italic:
-    "Times New Roman", Times, "KaiTi", "Kaiti SC", "STKaiti", "楷体", serif;
+    "LXGW WenKai", "Noto Serif SC Variable", "Noto Serif SC", serif;
   --font-doc-red-title:
-    Georgia, "Heiti SC", "SimHei", "STHeiti", "Microsoft YaHei", "PingFang SC",
-    "黑体", sans-serif;
+    "Noto Sans SC Variable", "Noto Sans SC", "Inter Variable", "Inter", sans-serif;
 
   font-family: var(--font-doc-body);
 }

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery } from "convex/react";
-import { Download, Code2, Share2 } from "lucide-react";
+import { Download, Code2, Share2, ChevronDown, Printer } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "../../convex/_generated/api";
 import { ContractEditor } from "@/components/editor/ContractEditor";
@@ -24,6 +24,14 @@ import {
   type PageFormat,
 } from "@/lib/page-format";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { GlassPanel } from "@/components/ui/glass-panel";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -34,10 +42,12 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useLanguage } from "@/providers/LanguageProvider";
+import { interpolate } from "@/lib/i18n";
 import {
   findPreviewCanvas,
   openPreviewPrintWindow,
 } from "@/lib/export-preview-html";
+import { downloadPreviewPdf } from "@/lib/export-preview-pdf";
 import { forceEditorPageFlowReflow } from "@/lib/tiptap-page-flow-extension";
 
 export function EditorPage() {
@@ -55,6 +65,7 @@ export function EditorPage() {
   const [awaitingEditTransfer, setAwaitingEditTransfer] = useState(false);
   const [requestingEdit, setRequestingEdit] = useState(false);
   const [editorPreviewReady, setEditorPreviewReady] = useState(false);
+  const [isExportingPdf, setIsExportingPdf] = useState(false);
   const hydratedDocumentIdRef = useRef<string | null>(null);
   const prevLockModeRef = useRef<"edit" | "read" | "pending">("pending");
 
@@ -203,25 +214,65 @@ export function EditorPage() {
     contentReady: isContentHydrated && (!canEdit || editorPreviewReady),
   });
 
-  const handleExport = async () => {
+  const prepareExportCanvas = async (): Promise<HTMLElement | null> => {
     if (showSourceCode) {
       toast.error(t("exportNoPreview"));
-      return;
+      return null;
     }
 
+    forceEditorPageFlowReflow();
+    await new Promise<void>((resolve) => {
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+    });
+    await new Promise((resolve) => setTimeout(resolve, 150));
+
+    const canvas = findPreviewCanvas();
+    if (!canvas) {
+      toast.error(t("exportNoPreview"));
+      return null;
+    }
+
+    return canvas;
+  };
+
+  const handleDownloadPdf = async () => {
+    if (isExportingPdf) return;
+
+    const canvas = await prepareExportCanvas();
+    if (!canvas) return;
+
+    setIsExportingPdf(true);
+    const toastId = toast.loading(t("exportPdfPreparing"));
+
     try {
-      forceEditorPageFlowReflow();
-      await new Promise<void>((resolve) => {
-        requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+      await downloadPreviewPdf(canvas, resolvedTitle, pageFormat, {
+        onProgress: ({ current, total }) => {
+          if (current === 0) {
+            toast.loading(t("exportPdfRendering"), { id: toastId });
+            return;
+          }
+          toast.loading(
+            interpolate(t("exportPdfProgress"), { current, total }),
+            { id: toastId },
+          );
+        },
       });
-      await new Promise((resolve) => setTimeout(resolve, 150));
+      toast.success(t("exportPdfSuccess"), { id: toastId });
+    } catch (error) {
+      console.error("PDF export failed:", error);
+      const detail =
+        error instanceof Error ? error.message : t("exportFailed");
+      toast.error(detail, { id: toastId });
+    } finally {
+      setIsExportingPdf(false);
+    }
+  };
 
-      const canvas = findPreviewCanvas();
-      if (!canvas) {
-        toast.error(t("exportNoPreview"));
-        return;
-      }
+  const handlePrintExport = async () => {
+    const canvas = await prepareExportCanvas();
+    if (!canvas) return;
 
+    try {
       const printWindow = openPreviewPrintWindow(
         canvas,
         resolvedTitle,
@@ -352,10 +403,42 @@ export function EditorPage() {
               <Code2 className="size-4" />
               {showSourceCode ? t("visual") : t("source")}
             </Button>
-            <Button size="sm" onClick={() => void handleExport()}>
-              <Download className="size-4" />
-              {t("export")}
-            </Button>
+            <div className="flex items-center">
+              <Button
+                size="sm"
+                className="rounded-r-none"
+                disabled={isExportingPdf}
+                onClick={() => void handleDownloadPdf()}
+              >
+                <Download className="size-4" />
+                {t("exportDownload")}
+              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  render={
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="default"
+                      className="rounded-l-none border-l border-primary-foreground/25 px-1.5"
+                      disabled={isExportingPdf}
+                      aria-label={t("exportAdvanced")}
+                    >
+                      <ChevronDown className="size-3.5" />
+                    </Button>
+                  }
+                />
+                <DropdownMenuContent align="end" className="min-w-40">
+                  <DropdownMenuGroup>
+                    <DropdownMenuLabel>{t("exportAdvanced")}</DropdownMenuLabel>
+                    <DropdownMenuItem onClick={() => void handlePrintExport()}>
+                      <Printer className="size-4" />
+                      {t("exportPrint")}
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
         </GlassPanel>
 

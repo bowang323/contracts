@@ -66,6 +66,34 @@ function collectDocumentStyles(): string {
   return chunks.join("\n");
 }
 
+/** Resolve @font-face URLs so export staging loads bundled fonts reliably. */
+export function collectFontFaceStyles(): string {
+  const chunks: string[] = [];
+  for (const sheet of Array.from(document.styleSheets)) {
+    try {
+      for (const rule of Array.from(sheet.cssRules)) {
+        if (rule instanceof CSSFontFaceRule) {
+          const css = rule.cssText.replace(
+            /url\((["']?)([^"')]+)\1\)/g,
+            (_match, quote: string, url: string) => {
+              try {
+                const absolute = new URL(url, window.location.href).href;
+                return `url(${quote}${absolute}${quote})`;
+              } catch {
+                return `url(${quote}${url}${quote})`;
+              }
+            },
+          );
+          chunks.push(css);
+        }
+      }
+    } catch {
+      // Skip cross-origin stylesheets.
+    }
+  }
+  return chunks.join("\n");
+}
+
 function buildPrintLayoutCss(
   pageFormat: PageFormat,
   printPageHeightPx: number,
@@ -110,9 +138,14 @@ function collapsePreviewGapsForPrint(
   root: HTMLElement,
   pageHeightPx: number,
   pageGapPx: number,
-  options?: { enforcePageHeight?: boolean; sourcePageHeightPx?: number },
+  options?: {
+    enforcePageHeight?: boolean;
+    sourcePageHeightPx?: number;
+    sourcePageWidthPx?: number;
+  },
 ): void {
   const sourcePageHeightPx = options?.sourcePageHeightPx ?? pageHeightPx;
+  const sourcePageWidthPx = options?.sourcePageWidthPx;
   const sourceStridePx = sourcePageHeightPx + pageGapPx;
   const pageCount = root.querySelectorAll(".contract-paper").length;
   const clipTopPx = parsePx(
@@ -120,7 +153,7 @@ function collapsePreviewGapsForPrint(
   );
 
   root.style.transform = "none";
-  root.style.width = `${root.offsetWidth || parsePx(root.style.width)}px`;
+  root.style.width = `${sourcePageWidthPx ?? (root.offsetWidth || parsePx(root.style.width))}px`;
   root.style.height = `${pageCount * pageHeightPx}px`;
 
   root.querySelectorAll<HTMLElement>(".contract-paper").forEach((el, index) => {
@@ -163,6 +196,83 @@ function collapsePreviewGapsForPrint(
   });
 }
 
+/** Clone the preview canvas with page gaps removed and print styling applied. */
+export function preparePreviewCanvasClone(
+  canvas: HTMLElement,
+  pageFormat: PageFormat,
+): { clone: HTMLElement; pageWidthPx: number; pageHeightPx: number; pageCount: number } {
+  const paper = getPaperPixels(pageFormat.page.size);
+  const pageHeightPx = paper.height;
+  const pageWidthPx = paper.width;
+  const clone = canvas.cloneNode(true) as HTMLElement;
+  clone.style.transform = "none";
+  clone.style.width = `${pageWidthPx}px`;
+  collapsePreviewGapsForPrint(clone, pageHeightPx, PAGE_GAP_PX, {
+    sourcePageHeightPx: paper.height,
+    sourcePageWidthPx: pageWidthPx,
+  });
+
+  const clipPath = clone.querySelector("clipPath");
+  const clipHost = clone.querySelector<HTMLElement>("[data-contract-clip-host]");
+  if (clipPath && clipHost) {
+    const clipId = `pdf-export-clip-${Date.now()}`;
+    clipPath.id = clipId;
+    const clipUrl = `url(#${clipId})`;
+    clipHost.style.clipPath = clipUrl;
+    clipHost.style.setProperty("-webkit-clip-path", clipUrl);
+  }
+
+  clone.style.transform = "none";
+  clone.style.boxShadow = "none";
+
+  const pageCount = clone.querySelectorAll(".contract-paper").length;
+  return { clone, pageWidthPx, pageHeightPx, pageCount };
+}
+
+/** Mount a print-layout preview clone in the live document for raster export. */
+export function mountPreviewForCapture(
+  canvas: HTMLElement,
+  pageFormat: PageFormat,
+): {
+  clone: HTMLElement;
+  stage: HTMLElement;
+  pageWidthPx: number;
+  pageHeightPx: number;
+  pageCount: number;
+  cleanup: () => void;
+} {
+  const { clone, pageWidthPx, pageHeightPx, pageCount } =
+    preparePreviewCanvasClone(canvas, pageFormat);
+
+  const stage = document.createElement("div");
+  stage.setAttribute("data-pdf-export-stage", "true");
+  stage.style.cssText = [
+    "position:fixed",
+    "left:0",
+    "top:0",
+    "pointer-events:none",
+    "z-index:-1",
+    "overflow:visible",
+  ].join(";");
+
+  const style = document.createElement("style");
+  style.textContent = collectFontFaceStyles();
+  stage.appendChild(style);
+  stage.appendChild(clone);
+  document.body.appendChild(stage);
+
+  return {
+    clone,
+    stage,
+    pageWidthPx,
+    pageHeightPx,
+    pageCount,
+    cleanup: () => {
+      stage.remove();
+    },
+  };
+}
+
 export function findPreviewCanvas(): HTMLElement | null {
   const canvas = document.querySelector(PREVIEW_CANVAS_SELECTOR);
   return canvas instanceof HTMLElement ? canvas : null;
@@ -177,12 +287,15 @@ export function buildPreviewPrintHtml(
   const safari = isSafariBrowser();
   const printPageHeightPx = getPrintPageHeightPx(paper.height, safari);
   const clone = canvas.cloneNode(true) as HTMLElement;
+  clone.style.transform = "none";
+  clone.style.width = `${paper.width}px`;
   collapsePreviewGapsForPrint(clone, printPageHeightPx, PAGE_GAP_PX, {
     enforcePageHeight: safari,
     sourcePageHeightPx: paper.height,
+    sourcePageWidthPx: paper.width,
   });
 
-  const styles = `${collectDocumentStyles()}\n${buildPrintLayoutCss(pageFormat, printPageHeightPx, safari)}`;
+  const styles = `${collectFontFaceStyles()}\n${collectDocumentStyles()}\n${buildPrintLayoutCss(pageFormat, printPageHeightPx, safari)}`;
   const safeTitle = title
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")

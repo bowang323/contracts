@@ -20,6 +20,7 @@ import {
   setPageLayoutMetrics,
 } from "@/lib/page-flow-layout-store";
 import { forceEditorPageFlowReflow } from "@/lib/tiptap-page-flow-extension";
+import { loadDocumentFonts } from "@/lib/load-document-fonts";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -87,6 +88,10 @@ export function PaginatedDocumentSurface({
     usableBodyPx: 400,
   });
   const measureRaf = useRef<number | null>(null);
+
+  useEffect(() => {
+    void loadDocumentFonts();
+  }, []);
 
   const paper = getPaperPixels(pageFormat.page.size);
   const marginIn = pageFormat.page.marginIn;

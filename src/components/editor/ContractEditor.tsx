@@ -49,6 +49,7 @@ import {
   TextWithMarkdownWhitespace,
 } from "@/lib/tiptap-markdown-preservation";
 import { UnderlineWithMarkdown } from "@/lib/tiptap-underline-markdown";
+import { MarkdownSerializerFix } from "@/lib/tiptap-markdown-serializer-fix";
 import { initializeEditorPreviewFromMarkdown } from "@/lib/editor-preview-init";
 import { useLanguage } from "@/providers/LanguageProvider";
 import { cn } from "@/lib/utils";
@@ -192,6 +193,7 @@ export function ContractEditor({
         transformPastedText: true,
         transformCopiedText: true,
       }),
+      MarkdownSerializerFix,
       PageFlowExtension,
       EditorShortcuts,
     ],
