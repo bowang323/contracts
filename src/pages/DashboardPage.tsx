@@ -12,14 +12,18 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import { AiSkillDialog } from "@/components/editor/AiSkillDialog";
 import { CreateDocumentDialog } from "@/components/documents/CreateDocumentDialog";
+import { ImportDocumentDialog } from "@/components/documents/ImportDocumentDialog";
 import { IntroLanguageBar } from "@/components/layout/IntroLanguageBar";
 import { Button } from "@/components/ui/button";
 import { GlassPanel } from "@/components/ui/glass-panel";
 import { useSidebar } from "@/components/ui/sidebar";
 import { useCreateDocument } from "@/hooks/useCreateDocument";
+import { upsertLocalDocument } from "@/lib/local-documents";
 import { AI_PLATFORM_HINTS } from "@/lib/markdown-format-guide";
+import { isElectronApp, parseShareUrl } from "@/lib/share-token";
 import { useLanguage } from "@/providers/LanguageProvider";
 
 const features = [
@@ -61,7 +65,9 @@ export function DashboardPage() {
   const { open, openMobile, isMobile, setOpen, setOpenMobile } = useSidebar();
   const { createDocument, isCreating } = useCreateDocument();
   const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [showImportDialog, setShowImportDialog] = useState(false);
   const [showAiSkill, setShowAiSkill] = useState(false);
+  const showImportFromUrl = isElectronApp();
 
   const sidebarIsOpen = isMobile ? openMobile : open;
   const aiPlatforms = AI_PLATFORM_HINTS[locale];
@@ -80,6 +86,18 @@ export function DashboardPage() {
       setShowCreateDialog(false);
       void navigate(`/d/${created.documentId}`);
     }
+  };
+
+  const handleImportFromUrl = (shareUrl: string): boolean => {
+    const shared = parseShareUrl(shareUrl);
+    if (!shared) return false;
+    upsertLocalDocument({
+      documentId: shared.documentId,
+      password: shared.password,
+    });
+    toast.success(t("importDocumentSuccess"));
+    void navigate(`/d/${shared.documentId}`);
+    return true;
   };
 
   return (
@@ -190,6 +208,17 @@ export function DashboardPage() {
                   )}
                   {isCreating ? t("creating") : t("newDocument")}
                 </Button>
+                {showImportFromUrl ? (
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="bg-white/10"
+                    onClick={() => setShowImportDialog(true)}
+                  >
+                    <Link2 className="size-4" />
+                    {t("importFromUrl")}
+                  </Button>
+                ) : null}
                 {!sidebarIsOpen ? (
                   <Button
                     size="lg"
@@ -213,6 +242,13 @@ export function DashboardPage() {
         isCreating={isCreating}
         onCreate={handleCreate}
       />
+      {showImportFromUrl ? (
+        <ImportDocumentDialog
+          open={showImportDialog}
+          onOpenChange={setShowImportDialog}
+          onImport={handleImportFromUrl}
+        />
+      ) : null}
       <AiSkillDialog open={showAiSkill} onOpenChange={setShowAiSkill} />
     </>
   );

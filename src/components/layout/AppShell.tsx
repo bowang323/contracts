@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useQuery } from "convex/react";
-import { Plus, Search, Loader2 } from "lucide-react";
+import { Link2, Plus, Search, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "../../../convex/_generated/api";
 import { LocalDocumentList } from "@/components/contracts/LocalDocumentList";
 import { CreateDocumentDialog } from "@/components/documents/CreateDocumentDialog";
+import { ImportDocumentDialog } from "@/components/documents/ImportDocumentDialog";
 import { LanguageToggle } from "@/components/layout/LanguageToggle";
 import { SidebarHideButton } from "@/components/layout/SidebarHideButton";
 import { AppIcon } from "@/components/layout/AppIcon";
@@ -38,10 +39,12 @@ import {
   mergeDocumentMetadata,
   removeLocalDocument,
   sortLocalDocuments,
+  upsertLocalDocument,
   type LocalDocumentCredential,
   type SortDirection,
   type SortField,
 } from "@/lib/local-documents";
+import { isElectronApp, parseShareUrl } from "@/lib/share-token";
 import { useLanguage } from "@/providers/LanguageProvider";
 
 export function AppShell() {
@@ -58,6 +61,8 @@ export function AppShell() {
   const [sortField, setSortField] = useState<SortField>("updatedAt");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
   const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [showImportDialog, setShowImportDialog] = useState(false);
+  const showImportFromUrl = isElectronApp();
 
   const metadata = useQuery(
     api.contracts.refreshMetadata,
@@ -130,6 +135,19 @@ export function AppShell() {
       void navigate("/");
     }
     toast.success(t("removedFromDevice"));
+  };
+
+  const handleImportFromUrl = (shareUrl: string): boolean => {
+    const shared = parseShareUrl(shareUrl);
+    if (!shared) return false;
+    upsertLocalDocument({
+      documentId: shared.documentId,
+      password: shared.password,
+    });
+    setCredentials(loadLocalDocuments());
+    toast.success(t("importDocumentSuccess"));
+    void navigate(`/d/${shared.documentId}`);
+    return true;
   };
 
   return (
@@ -211,6 +229,17 @@ export function AppShell() {
                 )}
                 {isCreating ? t("creating") : t("newDocument")}
               </Button>
+              {showImportFromUrl ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full bg-white/10"
+                  onClick={() => setShowImportDialog(true)}
+                >
+                  <Link2 className="size-4" />
+                  {t("importFromUrl")}
+                </Button>
+              ) : null}
             </SidebarHeader>
             <SidebarContent className="mt-4 min-h-0 flex-1 overflow-hidden p-0">
               <LocalDocumentList
@@ -234,6 +263,13 @@ export function AppShell() {
         isCreating={isCreating}
         onCreate={handleCreate}
       />
+      {showImportFromUrl ? (
+        <ImportDocumentDialog
+          open={showImportDialog}
+          onOpenChange={setShowImportDialog}
+          onImport={handleImportFromUrl}
+        />
+      ) : null}
     </SidebarProvider>
   );
 }

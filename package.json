@@ -1,8 +1,11 @@
 {
   "name": "contracts",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
+  "description": "Doc Flow — markdown-in, PDF-out document editor",
+  "author": "Doc Flow",
   "type": "module",
+  "main": "electron/main.cjs",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -10,7 +13,47 @@
     "lint": "eslint .",
     "typecheck": "tsc -b --noEmit",
     "check": "npm run lint && npm run typecheck",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "electron:dev": "concurrently -k \"VITE_IS_ELECTRON=true vite\" \"wait-on http://127.0.0.1:5173 && electron .\"",
+    "electron:icon": "node scripts/build-mac-icon.mjs",
+    "electron:build": "npm run electron:icon && VITE_IS_ELECTRON=true VITE_BASE_PATH=./ npm run build && electron-builder --mac --x64 -c.electronDist=node_modules/electron/dist",
+    "electron:pack": "npm run electron:icon && VITE_IS_ELECTRON=true VITE_BASE_PATH=./ npm run build && electron-builder --mac --x64 --dir -c.electronDist=node_modules/electron/dist"
+  },
+  "build": {
+    "appId": "com.docflow.app",
+    "productName": "Doc Flow",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "icon": "build/icon.icns",
+      "category": "public.app-category.productivity",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "minimumSystemVersion": "11.0",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "dmg": {
+      "title": "Doc Flow"
+    }
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
@@ -70,10 +113,15 @@
     "@typescript-eslint/eslint-plugin": "^8.62.1",
     "@typescript-eslint/parser": "^8.62.1",
     "@vitejs/plugin-react": "^6.0.3",
+    "concurrently": "^10.0.3",
+    "electron": "^28.3.3",
+    "electron-builder": "^24.13.3",
     "eslint": "^10.6.0",
     "eslint-config-prettier": "^10.1.8",
     "oxlint": "^1.71.0",
+    "sharp": "^0.35.3",
     "typescript": "~6.0.2",
-    "vite": "^8.1.1"
+    "vite": "^8.1.1",
+    "wait-on": "^9.0.10"
   }
 }

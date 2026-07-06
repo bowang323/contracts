@@ -27,6 +27,33 @@ Copy `.env.example` to `.env.local` and set your dev deployment URL (written by 
 | `npm run dev` | Vite dev server |
 | `npm run build` | Production build → `dist/` |
 | `npm run check` | Lint + typecheck |
+| `npm run electron:dev` | Desktop app against the Vite dev server |
+| `npm run electron:build` | Intel (x64) macOS `.dmg` / `.zip` → `release/` |
+
+## macOS desktop (Intel)
+
+The Electron shell targets **Intel (x64)** and **macOS 11+** (Big Sur and later). That covers older Intel hardware while still supporting modern CSS used by the UI.
+
+```bash
+# Dev (needs Convex URL in .env.local, same as the web app)
+npm run electron:dev
+
+# Package for Intel Macs (run on a Mac)
+npm run electron:build
+```
+
+Artifacts land in `release/` (`Doc Flow-*.dmg` and `.zip`).
+
+Optional env for share links from the desktop app:
+
+- `VITE_WEB_APP_ORIGIN` — public web origin used when building share links (e.g. `https://you.github.io/contracts`). Without it, share links use the local `file://` hash URL.
+
+## Stack
+
+- React 19 + Vite + Tailwind + shadcn/ui
+- Convex (document storage, edit locks)
+- TipTap + react-markdown
+- Electron (Intel macOS desktop)
 
 ## Deploy to GitHub Pages + Convex
 
@@ -80,9 +107,3 @@ Your site will be at:
 `https://<github-username>.github.io/<repo-name>/`
 
 (e.g. `https://james.github.io/contracts/`)
-
-## Stack
-
-- React 19 + Vite + Tailwind + shadcn/ui
-- Convex (document storage, edit locks)
-- TipTap + react-markdown

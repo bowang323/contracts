@@ -13,6 +13,7 @@ const en = {
   sortNameAsc: "Name (A–Z)",
   sortNameDesc: "Name (Z–A)",
   newDocument: "New document",
+  importFromUrl: "Import from URL",
   creating: "Creating…",
   sidebarFooter: "Markdown in · PDF out",
   hideSidebar: "Hide sidebar",
@@ -181,6 +182,15 @@ const en = {
   createDocumentNameLabel: "Document name",
   createDocumentConfirm: "Create",
   createDocumentCancel: "Cancel",
+  importDocumentTitle: "Import from URL",
+  importDocumentDescription:
+    "Paste a Doc Flow share link to add the document on this device.",
+  importDocumentUrlLabel: "Share link",
+  importDocumentUrlPlaceholder: "https://bowang323.github.io/contracts/d/…?k=…",
+  importDocumentConfirm: "Import",
+  importDocumentCancel: "Cancel",
+  importDocumentInvalidUrl: "That does not look like a valid Doc Flow share link.",
+  importDocumentSuccess: "Document imported",
 } as const;
 
 const zh: Record<keyof typeof en, string> = {
@@ -194,6 +204,7 @@ const zh: Record<keyof typeof en, string> = {
   sortNameAsc: "名称（A–Z）",
   sortNameDesc: "名称（Z–A）",
   newDocument: "新建文档",
+  importFromUrl: "从链接导入",
   creating: "创建中…",
   sidebarFooter: "Markdown 进 · PDF 出",
   hideSidebar: "隐藏侧栏",
@@ -359,6 +370,14 @@ const zh: Record<keyof typeof en, string> = {
   createDocumentNameLabel: "文档名称",
   createDocumentConfirm: "创建",
   createDocumentCancel: "取消",
+  importDocumentTitle: "从链接导入",
+  importDocumentDescription: "粘贴 Doc Flow 分享链接，即可在本设备打开该文档。",
+  importDocumentUrlLabel: "分享链接",
+  importDocumentUrlPlaceholder: "https://bowang323.github.io/contracts/d/…?k=…",
+  importDocumentConfirm: "导入",
+  importDocumentCancel: "取消",
+  importDocumentInvalidUrl: "这不是有效的 Doc Flow 分享链接。",
+  importDocumentSuccess: "文档已导入",
 };
 
 export const translations = { en, zh } as const;
