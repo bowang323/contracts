@@ -35,22 +35,28 @@
   font-display: swap;
 }
 
-/* Heiti (黑体) — Noto Sans CJK SC */
+/* Heiti (黑体) — Noto Sans CJK SC (CJK only; Latin uses Tinos) */
 @font-face {
   font-family: "Noto Sans CJK SC";
   src: url("../assets/fonts/noto-cjk/NotoSansSC-VF.ttf") format("truetype");
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
+  unicode-range:
+    U+2E80-2EFF, U+3000-303F, U+31C0-31EF, U+3200-32FF, U+3400-4DBF, U+4E00-9FFF,
+    U+F900-FAFF, U+FE10-FE1F, U+FE30-FE4F, U+FF00-FFEF;
 }
 
-/* Songti (宋体) — Noto Serif CJK SC */
+/* Songti (宋体) — Noto Serif CJK SC (CJK only; Latin uses Tinos) */
 @font-face {
   font-family: "Noto Serif CJK SC";
   src: url("../assets/fonts/noto-cjk/NotoSerifSC-VF.ttf") format("truetype");
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
+  unicode-range:
+    U+2E80-2EFF, U+3000-303F, U+31C0-31EF, U+3200-32FF, U+3400-4DBF, U+4E00-9FFF,
+    U+F900-FAFF, U+FE10-FE1F, U+FE30-FE4F, U+FF00-FFEF;
 }
 
 /* Fangsong (仿宋) — Zhuque Fangsong for Chinese emphasis */
@@ -60,4 +66,7 @@
   font-weight: 400;
   font-style: normal;
   font-display: swap;
+  unicode-range:
+    U+2E80-2EFF, U+3000-303F, U+31C0-31EF, U+3200-32FF, U+3400-4DBF, U+4E00-9FFF,
+    U+F900-FAFF, U+FE10-FE1F, U+FE30-FE4F, U+FF00-FFEF;
 }
