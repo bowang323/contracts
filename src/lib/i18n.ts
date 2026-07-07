@@ -54,6 +54,8 @@ const en = {
   homeGetStarted: "Get started",
   homeGetStartedHint: "Create a new document, or open your saved documents.",
   homeBrowseDocuments: "Open documents",
+  homeDownloadMac: "Download for macOS",
+  homeDownloadMacHint: "Intel Mac · macOS 11+ · unsigned build (right-click → Open first time)",
   dashboardTitle: "Your documents live here",
   dashboardDescription:
     "Each document has a unique ID and system-generated password, saved on this device. Pick one from the sidebar or create a new document.",
@@ -234,6 +236,8 @@ const zh: Record<keyof typeof en, string> = {
   homeGetStarted: "开始使用",
   homeGetStartedHint: "新建文档，或打开已保存的文档。",
   homeBrowseDocuments: "打开文档列表",
+  homeDownloadMac: "下载 macOS 版",
+  homeDownloadMacHint: "Intel Mac · macOS 11+ · 未签名（首次请右键 → 打开）",
   dashboardTitle: "您的文档在这里",
   dashboardDescription:
     "每个文档都有唯一 ID 和系统生成的密码，保存在本设备。从侧边栏选择或新建文档。",
