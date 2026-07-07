@@ -44,9 +44,40 @@ npm run electron:build
 
 Artifacts land in `release/` (`Doc Flow-*.dmg` and `.zip`).
 
+**Public download (web site):** [Doc-Flow-macOS-Intel.dmg](https://github.com/bowang323/contracts/releases/latest/download/Doc-Flow-macOS-Intel.dmg) — built from tagged releases on the `macOS-app` branch (see [Branching](#branching)).
+
 Optional env for share links from the desktop app:
 
-- `VITE_WEB_APP_ORIGIN` — public web origin used when building share links (e.g. `https://you.github.io/contracts`). Without it, share links use the local `file://` hash URL.
+- `VITE_WEB_APP_ORIGIN` — public web origin used when building share links (defaults to `https://bowang323.github.io/contracts` in CI).
+
+## Branching
+
+| Branch | Purpose | Deploy |
+|--------|---------|--------|
+| `main` | Web app (GitHub Pages + Convex) | Auto on push |
+| `macOS-app` | Desktop (Electron, Intel x64) | DMG on tag `desktop-v*` |
+
+**One-way sync:** merge `main` into `macOS-app` when the web app changes should ship in the desktop build. Do **not** merge `macOS-app` into `main` (desktop-only code stays on `macOS-app`).
+
+```bash
+git checkout macOS-app
+git fetch origin
+git merge origin/main
+# resolve conflicts in package.json, App.tsx, share-token.ts, electron/
+git push origin macOS-app
+```
+
+**Desktop release:**
+
+```bash
+# bump version in package.json, then:
+git tag desktop-v0.1.0
+git push origin desktop-v0.1.0
+```
+
+GitHub Actions builds the DMG and publishes [GitHub Releases](https://github.com/bowang323/contracts/releases). The stable download URL is always:
+
+`https://github.com/bowang323/contracts/releases/latest/download/Doc-Flow-macOS-Intel.dmg`
 
 ## Stack
 
@@ -76,6 +107,7 @@ Optional env for share links from the desktop app:
    |--------|----------|-------------|
    | `CONVEX_DEPLOY_KEY` | Yes | Production deploy key from Convex |
    | `VITE_SHARE_OBFUSCATION_KEY` | Recommended | Random string so share links stay stable across deploys |
+   | `VITE_CONVEX_URL` | Desktop releases | Production Convex URL (`https://….convex.cloud`) for `desktop-v*` DMG builds |
 
 5. **Enable GitHub Pages** (Settings → Pages):
    - **Source:** GitHub Actions
@@ -88,6 +120,11 @@ Optional env for share links from the desktop app:
 
 - **CI** (`.github/workflows/ci.yml`) — lint, typecheck, build
 - **Deploy** (`.github/workflows/deploy.yml`) — `npx convex deploy --cmd 'npm run build'`, then publish `dist/` to GitHub Pages
+
+### What runs on `macOS-app`
+
+- **Desktop CI** (`.github/workflows/desktop-ci.yml`) — lint, typecheck, unpacked `.app` smoke build
+- **Desktop Release** (`.github/workflows/desktop-release.yml`) — on tag `desktop-v*`, publishes Intel DMG to GitHub Releases
 
 You can also trigger deploy manually from the **Actions** tab.
 
@@ -107,3 +144,10 @@ Your site will be at:
 `https://<github-username>.github.io/<repo-name>/`
 
 (e.g. `https://james.github.io/contracts/`)
+
+### Branch protection (recommended)
+
+In GitHub → **Settings** → **Branches**:
+
+- **`main`** — require PR reviews before merge (optional); never merge `macOS-app` back into `main`.
+- **`macOS-app`** — allow your account to push; receives periodic merges from `main` only.

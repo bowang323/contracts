@@ -1,5 +1,6 @@
 import {
   Bot,
+  Download,
   FileDown,
   FilePlus,
   LayoutTemplate,
@@ -17,12 +18,14 @@ import { AiSkillDialog } from "@/components/editor/AiSkillDialog";
 import { CreateDocumentDialog } from "@/components/documents/CreateDocumentDialog";
 import { ImportDocumentDialog } from "@/components/documents/ImportDocumentDialog";
 import { IntroLanguageBar } from "@/components/layout/IntroLanguageBar";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { GlassPanel } from "@/components/ui/glass-panel";
 import { useSidebar } from "@/components/ui/sidebar";
 import { useCreateDocument } from "@/hooks/useCreateDocument";
 import { upsertLocalDocument } from "@/lib/local-documents";
+import { cn } from "@/lib/utils";
 import { AI_PLATFORM_HINTS } from "@/lib/markdown-format-guide";
+import { MACOS_INTEL_DMG_URL } from "@/lib/desktop-download";
 import { isElectronApp, parseShareUrl } from "@/lib/share-token";
 import { useLanguage } from "@/providers/LanguageProvider";
 
@@ -230,7 +233,26 @@ export function DashboardPage() {
                     {t("homeBrowseDocuments")}
                   </Button>
                 ) : null}
+                {!isElectronApp() ? (
+                  <a
+                    href={MACOS_INTEL_DMG_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={cn(
+                      buttonVariants({ variant: "outline", size: "lg" }),
+                      "bg-white/10",
+                    )}
+                  >
+                    <Download className="size-4" />
+                    {t("homeDownloadMac")}
+                  </a>
+                ) : null}
               </div>
+              {!isElectronApp() ? (
+                <p className="mt-4 text-xs text-muted-foreground">
+                  {t("homeDownloadMacHint")}
+                </p>
+              ) : null}
             </GlassPanel>
           </section>
         </div>
