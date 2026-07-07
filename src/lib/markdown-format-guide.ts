@@ -77,7 +77,7 @@ const guideEn: GuideSection[] = [
     bullets: [
       "Red title — English: Tinos bold. Chinese: 黑体 (Heiti) via Noto Sans CJK SC. Displayed larger with extra vertical emphasis.",
       "Body text — English: Tinos. Chinese: 宋体 (Songti) via Noto Serif CJK SC.",
-      "Italic / emphasis (*text*) — italic variant of the body font (Tinos italic / Noto Serif CJK SC).",
+      "Italic / emphasis (*text*) — English: Tinos italic. Chinese: 仿宋 (Fangsong) via Zhuque Fangsong.",
       "Headers and footers use the same body fonts as above.",
     ],
   },
@@ -132,7 +132,7 @@ const guideZh: GuideSection[] = [
     bullets: [
       "红头标题 — 英文：Tinos 粗体。中文：黑体（Noto Sans CJK SC）。字号较大并纵向加高显示。",
       "正文 — 英文：Tinos。中文：宋体（Noto Serif CJK SC）。",
-      "斜体 / 强调（*文字*）— 正文字体的斜体变体（Tinos 斜体 / Noto Serif CJK SC）。",
+      "斜体 / 强调（*文字*）— 英文：Tinos 斜体。中文：仿宋（朱雀仿宋 Zhuque Fangsong）。",
       "页眉、页脚与正文使用相同正文字体规则。",
     ],
   },
@@ -218,7 +218,7 @@ When describing formatting to the user, follow these rendering rules:
 | --- | --- | --- |
 | Red title | Tinos bold | 黑体 (Heiti) — Noto Sans CJK SC |
 | Body | Tinos | 宋体 (Songti) — Noto Serif CJK SC |
-| Italic / emphasis | Tinos *italic* | Noto Serif CJK SC *italic* |
+| Italic / emphasis | Tinos *italic* | 仿宋 (Fangsong) — Zhuque Fangsong |
 
 Mixed English and Chinese in one paragraph is expected.
 
@@ -313,7 +313,7 @@ ${TABLE_EXAMPLE}
 | --- | --- | --- |
 | 红头标题 | Tinos 粗体 | 黑体 — Noto Sans CJK SC |
 | 正文 | Tinos | 宋体 — Noto Serif CJK SC |
-| 斜体 / 强调 | Tinos 斜体 | Noto Serif CJK SC 斜体 |
+| 斜体 / 强调 | Tinos 斜体 | 仿宋 — 朱雀仿宋 Zhuque Fangsong |
 
 同一段落可混排中英文。
 
