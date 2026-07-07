@@ -1,0 +1,92 @@
+name: Desktop Release
+
+on:
+  push:
+    tags:
+      - "desktop-v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Semver without v prefix (e.g. 0.1.0)"
+        required: true
+        default: "0.1.0"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: desktop-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Resolve version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "tag=desktop-v${{ inputs.version }}" >> "$GITHUB_OUTPUT"
+            echo "semver=${{ inputs.version }}" >> "$GITHUB_OUTPUT"
+          else
+            TAG="${GITHUB_REF#refs/tags/}"
+            echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+            echo "semver=${TAG#desktop-v}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Sync package.json version
+        run: |
+          node -e "
+            const fs = require('fs');
+            const p = 'package.json';
+            const pkg = JSON.parse(fs.readFileSync(p, 'utf8'));
+            pkg.version = '${{ steps.version.outputs.semver }}';
+            fs.writeFileSync(p, JSON.stringify(pkg, null, 2) + '\n');
+          "
+
+      - run: npm ci
+
+      - name: Build macOS Intel app
+        run: npx convex deploy --cmd 'npm run electron:build'
+        env:
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+          VITE_IS_ELECTRON: "true"
+          VITE_BASE_PATH: "./"
+          VITE_SHARE_OBFUSCATION_KEY: ${{ secrets.VITE_SHARE_OBFUSCATION_KEY }}
+          VITE_WEB_APP_ORIGIN: https://bowang323.github.io/contracts
+
+      - name: Stage release assets
+        run: |
+          mkdir -p release-upload
+          DMG=$(ls release/*.dmg | head -1)
+          cp "$DMG" release-upload/Doc-Flow-macOS-Intel.dmg
+          ZIP=$(ls release/*-mac.zip 2>/dev/null | head -1 || true)
+          if [ -n "$ZIP" ]; then
+            cp "$ZIP" release-upload/Doc-Flow-macOS-Intel.zip
+          fi
+          ls -lh release-upload/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: Doc Flow ${{ steps.version.outputs.semver }} (macOS Intel)
+          body: |
+            Intel (x64) macOS 11+ desktop build.
+
+            **Install:** download `Doc-Flow-macOS-Intel.dmg`, open the app, then right-click → Open on first launch (unsigned build).
+
+            Share links from the desktop app point at the web app: https://bowang323.github.io/contracts
+          files: |
+            release-upload/Doc-Flow-macOS-Intel.dmg
+            release-upload/Doc-Flow-macOS-Intel.zip
+          draft: false
+          prerelease: false
+          fail_on_unmatched_files: false

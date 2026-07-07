@@ -1,0 +1,59 @@
+name: Desktop CI
+
+on:
+  push:
+    branches: [macOS-app]
+  pull_request:
+    branches: [macOS-app]
+
+concurrency:
+  group: desktop-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run lint
+
+      - run: npm run typecheck
+
+  pack:
+    runs-on: macos-latest
+    needs: check
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Pack unpacked macOS app
+        env:
+          VITE_IS_ELECTRON: "true"
+          VITE_BASE_PATH: "./"
+          VITE_WEB_APP_ORIGIN: https://bowang323.github.io/contracts
+        run: |
+          if [ -z "${{ secrets.VITE_CONVEX_URL }}" ]; then
+            export VITE_CONVEX_URL="https://placeholder.convex.cloud"
+          else
+            export VITE_CONVEX_URL="${{ secrets.VITE_CONVEX_URL }}"
+          fi
+          npm run electron:pack
+
+      - name: Verify app bundle
+        run: |
+          test -d "release/mac/Doc Flow.app"
+          file "release/mac/Doc Flow.app/Contents/MacOS/Doc Flow"
