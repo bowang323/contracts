@@ -55,7 +55,7 @@ const en = {
   homeGetStarted: "Get started",
   homeGetStartedHint: "Create a new document, or pick one from the sidebar.",
   homeFontAttribution:
-    "Document fonts: Tinos (English) and Noto CJK SC (Chinese) — SIL Open Font License.",
+    "Document fonts: Tinos, Noto CJK SC, and Zhuque Fangsong — SIL Open Font License.",
   homeFontAttributionLink: "Font licenses & attribution",
   homeDownloadMac: "Download for macOS",
   homeDownloadMacHint: "Intel Mac · macOS 11+ · unsigned build (right-click → Open first time)",
@@ -249,7 +249,7 @@ const zh: Record<keyof typeof en, string> = {
   homeGetStarted: "开始使用",
   homeGetStartedHint: "新建文档，或从左侧边栏选择已有文档。",
   homeFontAttribution:
-    "文档字体：Tinos（英文）与 Noto CJK SC（中文）— SIL 开源字体许可证。",
+    "文档字体：Tinos、Noto CJK SC、朱雀仿宋 — SIL 开源字体许可证。",
   homeFontAttributionLink: "字体许可与署名",
   homeDownloadMac: "下载 macOS 版",
   homeDownloadMacHint: "Intel Mac · macOS 11+ · 未签名（首次请右键 → 打开）",

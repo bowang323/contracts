@@ -1,6 +1,6 @@
 let loadPromise: Promise<void> | null = null;
 
-/** Lazy-load document fonts (Tinos, Noto CJK SC) before layout/pagination. */
+/** Lazy-load document fonts (Tinos, Noto CJK SC, Zhuque Fangsong) before layout/pagination. */
 export function loadDocumentFonts(): Promise<void> {
   if (!loadPromise) {
     loadPromise = import("@/styles/fonts-document.css").then(async () => {

@@ -5,6 +5,8 @@
 .paginated-paper-canvas {
   --font-doc-body:
     "Noto Serif CJK SC", "Tinos", "Songti SC", "STSong", serif;
+  --font-doc-body-italic:
+    "Tinos", "Zhuque Fangsong", "FangSong", "STFangsong", serif;
   --font-doc-red-title:
     "Noto Sans CJK SC", "Tinos", "Heiti SC", "STHeiti", sans-serif;
 
@@ -59,7 +61,7 @@
 
 .contract-prose :is(em, i),
 .contract-prose-editor :is(em, i) {
-  font-family: var(--font-doc-body);
+  font-family: var(--font-doc-body-italic);
   font-style: italic;
   font-synthesis: none;
 }
