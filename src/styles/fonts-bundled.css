@@ -52,12 +52,3 @@
   font-style: normal;
   font-display: swap;
 }
-
-/* Kaiti (楷体) — medium weight from Noto Serif CJK SC variable font */
-@font-face {
-  font-family: "Noto Serif CJK SC Kaiti";
-  src: url("../assets/fonts/noto-cjk/NotoSerifSC-VF.ttf") format("truetype");
-  font-weight: 450 550;
-  font-style: normal;
-  font-display: swap;
-}
