@@ -105,9 +105,8 @@ GitHub Actions builds the DMG and publishes [GitHub Releases](https://github.com
 4. **Add GitHub repository secrets** (Settings → Secrets and variables → Actions):
    | Secret | Required | Description |
    |--------|----------|-------------|
-   | `CONVEX_DEPLOY_KEY` | Yes | Production deploy key from Convex |
+   | `CONVEX_DEPLOY_KEY` | Yes | Production deploy key from Convex (web deploy + desktop releases) |
    | `VITE_SHARE_OBFUSCATION_KEY` | Recommended | Random string so share links stay stable across deploys |
-   | `VITE_CONVEX_URL` | Desktop releases | Production Convex URL (`https://….convex.cloud`) for `desktop-v*` DMG builds |
 
 5. **Enable GitHub Pages** (Settings → Pages):
    - **Source:** GitHub Actions

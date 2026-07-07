@@ -53,19 +53,12 @@ jobs:
 
       - run: npm ci
 
-      - name: Require production Convex URL
-        run: |
-          if [ -z "${{ secrets.VITE_CONVEX_URL }}" ]; then
-            echo "::error::Add VITE_CONVEX_URL repository secret (production Convex deployment URL)."
-            exit 1
-          fi
-
       - name: Build macOS Intel app
-        run: npm run electron:build
+        run: npx convex deploy --cmd 'npm run electron:build'
         env:
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
           VITE_IS_ELECTRON: "true"
           VITE_BASE_PATH: "./"
-          VITE_CONVEX_URL: ${{ secrets.VITE_CONVEX_URL }}
           VITE_SHARE_OBFUSCATION_KEY: ${{ secrets.VITE_SHARE_OBFUSCATION_KEY }}
           VITE_WEB_APP_ORIGIN: https://bowang323.github.io/contracts
 
