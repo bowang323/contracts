@@ -15,6 +15,11 @@ build/icon.iconset
 .npm-cache
 *.local
 
+# Desktop / local build outputs
+build/
+release/
+.npm-cache/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

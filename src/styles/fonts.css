@@ -1,5 +1,7 @@
 /**
  * UI fonts — loaded on every page.
+ * Document @font-face rules are eager-loaded so the editor paints with Tinos/Noto.
  */
 @import "@fontsource-variable/inter";
 @import "./fonts-tinos.css";
+@import "./fonts-bundled.css";

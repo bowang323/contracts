@@ -1,21 +1,31 @@
 /**
  * Official document typography (preview, editor, print export).
- * Bundled Tinos (English) and Noto CJK SC (Chinese) with system fallbacks.
+ * Doc Flow Latin (Tinos) + Doc Flow CJK (Noto / Zhuque) with system fallbacks.
  */
-.paginated-paper-canvas {
+:root {
   --font-doc-body:
-    "Tinos", "Noto Serif CJK SC", "Songti SC", "STSong", serif;
+    "Doc Flow Latin", "Doc Flow CJK Serif", "Songti SC", "STSong", serif;
   --font-doc-body-italic:
-    "Tinos", "Zhuque Fangsong", "FangSong", "STFangsong", serif;
+    "Doc Flow Latin", "Doc Flow Fangsong", "FangSong", "STFangsong", serif;
   --font-doc-red-title:
-    "Tinos", "Noto Sans CJK SC", "Heiti SC", "STHeiti", sans-serif;
+    "Doc Flow Latin", "Doc Flow CJK Sans", "Heiti SC", "STHeiti", sans-serif;
+}
 
+.paginated-paper-canvas,
+.paginated-paper-canvas .tiptap,
+.paginated-paper-canvas .ProseMirror,
+.paginated-paper-canvas .contract-prose,
+.paginated-paper-canvas .contract-prose-editor,
+.paginated-paper-canvas .contract-prose-preview {
   font-family: var(--font-doc-body);
+  font-synthesis: none;
 }
 
 .contract-prose,
-.contract-prose-editor {
+.contract-prose-editor,
+.contract-prose-preview {
   font-family: var(--font-doc-body);
+  font-synthesis: none;
 }
 
 .page-header,
@@ -60,7 +70,8 @@
 }
 
 .contract-prose :is(em, i),
-.contract-prose-editor :is(em, i) {
+.contract-prose-editor :is(em, i),
+.contract-prose-preview :is(em, i) {
   font-family: var(--font-doc-body-italic);
   font-style: italic;
   font-synthesis: none;
