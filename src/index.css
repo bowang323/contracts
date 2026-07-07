@@ -149,6 +149,10 @@
   @apply mb-4 text-center text-2xl font-bold;
 }
 
+.paginated-paper-canvas .contract-prose :is(h1, h2, h3, h4, h5, h6, p, li, td, th) {
+  font-family: inherit;
+}
+
 .contract-prose h2 {
   @apply text-xl font-semibold mt-6 mb-3;
 }
