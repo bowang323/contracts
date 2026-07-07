@@ -6,7 +6,6 @@ import {
   LayoutTemplate,
   Link2,
   Loader2,
-  PanelLeft,
   PenLine,
   Radio,
   Stamp,
@@ -15,10 +14,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AiSkillDialog } from "@/components/editor/AiSkillDialog";
 import { CreateDocumentDialog } from "@/components/documents/CreateDocumentDialog";
-import { IntroLanguageBar } from "@/components/layout/IntroLanguageBar";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { GlassPanel } from "@/components/ui/glass-panel";
-import { useSidebar } from "@/components/ui/sidebar";
 import { useCreateDocument } from "@/hooks/useCreateDocument";
 import { MACOS_INTEL_DMG_URL } from "@/lib/desktop-download";
 import { AI_PLATFORM_HINTS } from "@/lib/markdown-format-guide";
@@ -61,21 +58,11 @@ const features = [
 export function DashboardPage() {
   const { locale, t } = useLanguage();
   const navigate = useNavigate();
-  const { open, openMobile, isMobile, setOpen, setOpenMobile } = useSidebar();
   const { createDocument, isCreating } = useCreateDocument();
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showAiSkill, setShowAiSkill] = useState(false);
 
-  const sidebarIsOpen = isMobile ? openMobile : open;
   const aiPlatforms = AI_PLATFORM_HINTS[locale];
-
-  const handleShowDocuments = () => {
-    if (isMobile) {
-      setOpenMobile(true);
-    } else {
-      setOpen(true);
-    }
-  };
 
   const handleCreate = async (title: string) => {
     const created = await createDocument(title);
@@ -88,12 +75,6 @@ export function DashboardPage() {
   return (
     <>
       <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
-        <header className="safari-sticky-blur sticky top-0 z-10 border-b border-white/10 bg-orange-950/20 px-6 py-4 backdrop-blur-xl">
-          <div className="mx-auto flex w-full max-w-3xl justify-center sm:justify-end">
-            <IntroLanguageBar />
-          </div>
-        </header>
-
         <div className="mx-auto flex w-full max-w-3xl flex-col gap-10 px-6 py-10 pb-16">
           <section className="text-center">
             <p className="text-xs font-medium uppercase tracking-[0.2em] text-primary">
@@ -193,17 +174,6 @@ export function DashboardPage() {
                   )}
                   {isCreating ? t("creating") : t("newDocument")}
                 </Button>
-                {!sidebarIsOpen ? (
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="bg-white/10"
-                    onClick={handleShowDocuments}
-                  >
-                    <PanelLeft className="size-4" />
-                    {t("homeBrowseDocuments")}
-                  </Button>
-                ) : null}
                 <a
                   href={MACOS_INTEL_DMG_URL}
                   target="_blank"
@@ -222,6 +192,20 @@ export function DashboardPage() {
               </p>
             </GlassPanel>
           </section>
+
+          <footer className="text-center text-xs leading-relaxed text-muted-foreground">
+            <p>{t("homeFontAttribution")}</p>
+            <p className="mt-1">
+              <a
+                href="https://github.com/bowang323/contracts/blob/main/FONTS.md"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2 hover:text-foreground"
+              >
+                {t("homeFontAttributionLink")}
+              </a>
+            </p>
+          </footer>
         </div>
       </div>
 

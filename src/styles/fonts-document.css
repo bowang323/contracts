@@ -1,7 +1,4 @@
 /**
  * Document fonts — lazy-loaded when the editor/preview mounts.
- * Noto SC covers body/titles; LXGW WenKai covers 楷体-style emphasis.
  */
-@import "@fontsource-variable/noto-serif-sc";
-@import "@fontsource-variable/noto-sans-sc";
-@import "@fontsource/lxgw-wenkai";
+@import "./fonts-bundled.css";

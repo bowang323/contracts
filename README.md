@@ -28,6 +28,8 @@ Copy `.env.example` to `.env.local` and set your dev deployment URL (written by 
 | `npm run build` | Production build → `dist/` |
 | `npm run check` | Lint + typecheck |
 
+Bundled document fonts (Tinos, Noto CJK SC) and attribution: see [FONTS.md](FONTS.md).
+
 ## Deploy to GitHub Pages + Convex
 
 ### One-time setup
