@@ -75,9 +75,9 @@ const guideEn: GuideSection[] = [
       "Fonts apply in the paginated preview and PDF export. Mixed English and Chinese in one line is supported.",
     ],
     bullets: [
-      "Red title — English: Georgia. Chinese: 黑体 (Heiti). Displayed larger with extra vertical emphasis.",
-      "Body text — English & Chinese: Noto Serif SC (bundled open font).",
-      "Italic / emphasis (*text*) — English: Source Serif 4 italic. Chinese: LXGW WenKai (楷体-style, upright).",
+      "Red title — English: Tinos bold. Chinese: 黑体 (Heiti) via Noto Sans CJK SC. Displayed larger with extra vertical emphasis.",
+      "Body text — English: Tinos. Chinese: 宋体 (Songti) via Noto Serif CJK SC.",
+      "Italic / emphasis (*text*) — English: Tinos italic. Chinese: 楷体 (Kaiti) via Noto Serif CJK SC (medium weight).",
       "Headers and footers use the same body fonts as above.",
     ],
   },
@@ -130,9 +130,9 @@ const guideZh: GuideSection[] = [
       "以下字体用于分页预览与 PDF 导出。同一行可混排中英文。",
     ],
     bullets: [
-      "红头标题 — 英文：Georgia。中文：黑体。字号较大并纵向加高显示。",
-      "正文 — 英文与中文：Noto Serif SC（内置开源字体）。",
-      "斜体 / 强调（*文字*）— 英文：Source Serif 4 斜体。中文：霞鹜文楷 LXGW WenKai（不倾斜）。",
+      "红头标题 — 英文：Tinos 粗体。中文：黑体（Noto Sans CJK SC）。字号较大并纵向加高显示。",
+      "正文 — 英文：Tinos。中文：宋体（Noto Serif CJK SC）。",
+      "斜体 / 强调（*文字*）— 英文：Tinos 斜体。中文：楷体（Noto Serif CJK SC 中等字重）。",
       "页眉、页脚与正文使用相同正文字体规则。",
     ],
   },
@@ -216,9 +216,9 @@ When describing formatting to the user, follow these rendering rules:
 
 | Region | English | Chinese |
 | --- | --- | --- |
-| Red title | Georgia | 黑体 (Heiti) |
-| Body | Noto Serif SC | Noto Serif SC |
-| Italic / emphasis | Source Serif 4 *italic* | LXGW WenKai, upright |
+| Red title | Tinos bold | 黑体 (Heiti) — Noto Sans CJK SC |
+| Body | Tinos | 宋体 (Songti) — Noto Serif CJK SC |
+| Italic / emphasis | Tinos *italic* | 楷体 (Kaiti) — Noto Serif CJK SC |
 
 Mixed English and Chinese in one paragraph is expected.
 
@@ -311,9 +311,9 @@ ${TABLE_EXAMPLE}
 
 | 区域 | 英文 | 中文 |
 | --- | --- | --- |
-| 红头标题 | Georgia | 黑体 |
-| 正文 | Noto Serif SC | Noto Serif SC |
-| 斜体 / 强调 | Source Serif 4 斜体 | 霞鹜文楷（不倾斜） |
+| 红头标题 | Tinos 粗体 | 黑体 — Noto Sans CJK SC |
+| 正文 | Tinos | 宋体 — Noto Serif CJK SC |
+| 斜体 / 强调 | Tinos 斜体 | 楷体 — Noto Serif CJK SC |
 
 同一段落可混排中英文。
 

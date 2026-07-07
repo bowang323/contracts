@@ -86,6 +86,8 @@ GitHub Actions builds the DMG and publishes [GitHub Releases](https://github.com
 - TipTap + react-markdown
 - Electron (Intel macOS desktop)
 
+Bundled document fonts (Tinos, Noto CJK SC) and attribution: see [FONTS.md](FONTS.md).
+
 ## Deploy to GitHub Pages + Convex
 
 ### One-time setup

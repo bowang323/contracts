@@ -51,8 +51,7 @@ export function AppShell() {
   const { t } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
-  const isHome = location.pathname === "/";
-  const [sidebarOpen, setSidebarOpen] = useState(() => !isHome);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const { createDocument, isCreating } = useCreateDocument();
   const [search, setSearch] = useState("");
   const [credentials, setCredentials] = useState<LocalDocumentCredential[]>(() =>
@@ -81,11 +80,6 @@ export function AppShell() {
     [credentials, metadata],
   );
 
-  useEffect(() => {
-    if (isHome) {
-      setSidebarOpen(false);
-    }
-  }, [isHome]);
 
   useEffect(() => {
     const reload = () => setCredentials(loadLocalDocuments());
