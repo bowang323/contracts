@@ -51,7 +51,47 @@ const PRINT_LAYOUT_CSS = `
     page-break-after: auto;
     break-after: auto;
   }
+  .page-red-title {
+    overflow: visible;
+    padding-top: 0.35rem;
+  }
+  .page-red-title-text,
+  .page-red-title p {
+    transform-origin: center bottom;
+    overflow: visible;
+    white-space: normal;
+    text-overflow: clip;
+  }
+  .contract-prose :is(em, i),
+  .contract-prose-editor :is(em, i),
+  .contract-prose-preview :is(em, i) {
+    font-style: normal;
+    font-synthesis: none;
+  }
 `;
+
+const EXPORT_FONT_FAMILIES = [
+  "Doc Flow Latin",
+  "Doc Flow Latin Italic",
+  "Doc Flow CJK Serif",
+  "Doc Flow CJK Sans",
+  "Doc Flow Fangsong",
+] as const;
+
+/** Wait until bundled document fonts are loaded in an export/print document. */
+export async function waitForPrintDocumentFonts(doc: Document): Promise<void> {
+  const fonts = doc.fonts;
+  if (!fonts) return;
+
+  await Promise.all(
+    EXPORT_FONT_FAMILIES.flatMap((family) => [
+      fonts.load(`400 16px "${family}"`),
+      fonts.load(`700 16px "${family}"`),
+    ]),
+  );
+
+  await fonts.ready;
+}
 
 function collectDocumentStyles(): string {
   const chunks: string[] = [];
@@ -229,50 +269,6 @@ export function preparePreviewCanvasClone(
   return { clone, pageWidthPx, pageHeightPx, pageCount };
 }
 
-/** Mount a print-layout preview clone in the live document for raster export. */
-export function mountPreviewForCapture(
-  canvas: HTMLElement,
-  pageFormat: PageFormat,
-): {
-  clone: HTMLElement;
-  stage: HTMLElement;
-  pageWidthPx: number;
-  pageHeightPx: number;
-  pageCount: number;
-  cleanup: () => void;
-} {
-  const { clone, pageWidthPx, pageHeightPx, pageCount } =
-    preparePreviewCanvasClone(canvas, pageFormat);
-
-  const stage = document.createElement("div");
-  stage.setAttribute("data-pdf-export-stage", "true");
-  stage.style.cssText = [
-    "position:fixed",
-    "left:0",
-    "top:0",
-    "pointer-events:none",
-    "z-index:-1",
-    "overflow:visible",
-  ].join(";");
-
-  const style = document.createElement("style");
-  style.textContent = collectFontFaceStyles();
-  stage.appendChild(style);
-  stage.appendChild(clone);
-  document.body.appendChild(stage);
-
-  return {
-    clone,
-    stage,
-    pageWidthPx,
-    pageHeightPx,
-    pageCount,
-    cleanup: () => {
-      stage.remove();
-    },
-  };
-}
-
 export function findPreviewCanvas(): HTMLElement | null {
   const canvas = document.querySelector(PREVIEW_CANVAS_SELECTOR);
   return canvas instanceof HTMLElement ? canvas : null;
@@ -314,17 +310,19 @@ export function buildPreviewPrintHtml(
 </html>`;
 }
 
-export function openPreviewPrintWindow(
+export async function openPreviewPrintWindow(
   canvas: HTMLElement,
   title: string,
   pageFormat: PageFormat,
-): Window | null {
+): Promise<Window | null> {
   const printWindow = window.open("", "_blank");
   if (!printWindow) return null;
 
   printWindow.document.write(buildPreviewPrintHtml(canvas, title, pageFormat));
   printWindow.document.close();
   printWindow.document.title = title;
+
+  await waitForPrintDocumentFonts(printWindow.document);
   printWindow.focus();
   return printWindow;
 }

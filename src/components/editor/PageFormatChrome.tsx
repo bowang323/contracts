@@ -64,7 +64,7 @@ export function PageFormatChrome({
     <div className={cn("page-format-chrome", className)}>
       {showTop && showRedTitle && (
         <div className="page-red-title mb-4">
-          <p className="page-red-title-text truncate">
+          <p className="page-red-title-text">
             {normalized.redTitle.text}
           </p>
           <div className="page-red-title-line" />

@@ -377,7 +377,7 @@ export function renderPageFormatHtml(format: PageFormat): string {
 
   if (normalized.redTitle.show && normalized.redTitle.text.trim()) {
     topParts.push(
-      `<div class="page-red-title"><p>${escapeHtml(normalized.redTitle.text)}</p><div class="page-red-title-line"></div></div>`,
+      `<div class="page-red-title"><p class="page-red-title-text">${escapeHtml(normalized.redTitle.text)}</p><div class="page-red-title-line"></div></div>`,
     );
   }
 
