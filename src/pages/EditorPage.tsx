@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery } from "convex/react";
-import { Download, Code2, Share2, ChevronDown, Printer } from "lucide-react";
+import { Download, Code2, Share2, ChevronDown, Printer, MoreHorizontal } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "../../convex/_generated/api";
 import { ContractEditor } from "@/components/editor/ContractEditor";
@@ -30,6 +30,7 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { GlassPanel } from "@/components/ui/glass-panel";
@@ -42,7 +43,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useLanguage } from "@/providers/LanguageProvider";
-import { interpolate } from "@/lib/i18n";
 import {
   findPreviewCanvas,
   openPreviewPrintWindow,
@@ -246,13 +246,9 @@ export function EditorPage() {
 
     try {
       await downloadPreviewPdf(canvas, resolvedTitle, pageFormat, {
-        onProgress: ({ current, total }) => {
-          if (current === 0) {
-            toast.loading(t("exportPdfRendering"), { id: toastId });
-            return;
-          }
+        onProgress: ({ current }) => {
           toast.loading(
-            interpolate(t("exportPdfProgress"), { current, total }),
+            current === 0 ? t("exportPdfRendering") : t("exportPdfProgress"),
             { id: toastId },
           );
         },
@@ -273,7 +269,7 @@ export function EditorPage() {
     if (!canvas) return;
 
     try {
-      const printWindow = openPreviewPrintWindow(
+      const printWindow = await openPreviewPrintWindow(
         canvas,
         resolvedTitle,
         pageFormat,
@@ -340,7 +336,7 @@ export function EditorPage() {
       <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-hidden p-3 md:p-4">
         <GlassPanel
           variant="toolbar"
-          className="no-print flex shrink-0 flex-nowrap items-center gap-2 p-3"
+          className="@container/editor-toolbar no-print flex shrink-0 flex-nowrap items-center gap-2 p-3"
         >
           <SidebarShowButton />
           <Input
@@ -387,58 +383,101 @@ export function EditorPage() {
             )}
           </div>
           <div className="ml-auto flex shrink-0 items-center gap-1.5">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowShare(true)}
-            >
-              <Share2 className="size-4" />
-              {t("share")}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowSourceCode((v) => !v)}
-            >
-              <Code2 className="size-4" />
-              {showSourceCode ? t("visual") : t("source")}
-            </Button>
-            <div className="flex items-center">
+            <div className="hidden items-center gap-1.5 @min-[35rem]/editor-toolbar:flex">
               <Button
+                variant="outline"
                 size="sm"
-                className="rounded-r-none"
-                disabled={isExportingPdf}
-                onClick={() => void handleDownloadPdf()}
+                onClick={() => setShowShare(true)}
               >
-                <Download className="size-4" />
-                {t("exportDownload")}
+                <Share2 className="size-4" />
+                {t("share")}
               </Button>
-              <DropdownMenu>
-                <DropdownMenuTrigger
-                  render={
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="default"
-                      className="rounded-l-none border-l border-primary-foreground/25 px-1.5"
-                      disabled={isExportingPdf}
-                      aria-label={t("exportAdvanced")}
-                    >
-                      <ChevronDown className="size-3.5" />
-                    </Button>
-                  }
-                />
-                <DropdownMenuContent align="end" className="min-w-40">
-                  <DropdownMenuGroup>
-                    <DropdownMenuLabel>{t("exportAdvanced")}</DropdownMenuLabel>
-                    <DropdownMenuItem onClick={() => void handlePrintExport()}>
-                      <Printer className="size-4" />
-                      {t("exportPrint")}
-                    </DropdownMenuItem>
-                  </DropdownMenuGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowSourceCode((v) => !v)}
+              >
+                <Code2 className="size-4" />
+                {showSourceCode ? t("visual") : t("source")}
+              </Button>
+              <div className="flex items-center">
+                <Button
+                  size="sm"
+                  className="rounded-r-none"
+                  disabled={isExportingPdf}
+                  onClick={() => void handleDownloadPdf()}
+                >
+                  <Download className="size-4" />
+                  {t("exportDownload")}
+                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger
+                    render={
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="default"
+                        className="rounded-l-none border-l border-primary-foreground/25 px-1.5"
+                        disabled={isExportingPdf}
+                        aria-label={t("exportAdvanced")}
+                      >
+                        <ChevronDown className="size-3.5" />
+                      </Button>
+                    }
+                  />
+                  <DropdownMenuContent align="end" className="min-w-40">
+                    <DropdownMenuGroup>
+                      <DropdownMenuLabel>{t("exportAdvanced")}</DropdownMenuLabel>
+                      <DropdownMenuItem onClick={() => void handlePrintExport()}>
+                        <Printer className="size-4" />
+                        {t("exportPrint")}
+                      </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </div>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                render={
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="@min-[35rem]/editor-toolbar:hidden"
+                    aria-label={t("toolbarMore")}
+                  >
+                    <MoreHorizontal className="size-4" />
+                    <span className="sr-only">{t("toolbarMore")}</span>
+                  </Button>
+                }
+              />
+              <DropdownMenuContent align="end" className="min-w-44">
+                <DropdownMenuGroup>
+                  <DropdownMenuItem onClick={() => setShowShare(true)}>
+                    <Share2 className="size-4" />
+                    {t("share")}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setShowSourceCode((v) => !v)}>
+                    <Code2 className="size-4" />
+                    {showSourceCode ? t("visual") : t("source")}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    disabled={isExportingPdf}
+                    onClick={() => void handleDownloadPdf()}
+                  >
+                    <Download className="size-4" />
+                    {t("exportDownload")}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => void handlePrintExport()}>
+                    <Printer className="size-4" />
+                    {t("exportPrint")}
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </GlassPanel>
 

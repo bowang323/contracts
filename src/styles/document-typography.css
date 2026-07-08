@@ -6,7 +6,7 @@
   --font-doc-body:
     "Doc Flow Latin", "Doc Flow CJK Serif", "Songti SC", "STSong", serif;
   --font-doc-body-italic:
-    "Doc Flow Latin", "Doc Flow Fangsong", "FangSong", "STFangsong", serif;
+    "Doc Flow Latin Italic", "Doc Flow Fangsong", "FangSong", "STFangsong", serif;
   --font-doc-red-title:
     "Doc Flow Latin", "Doc Flow CJK Sans", "Heiti SC", "STHeiti", sans-serif;
 }
@@ -42,8 +42,13 @@
 
 .page-red-title {
   font-family: var(--font-doc-red-title);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
   min-height: 3.75rem;
+  padding-top: 0.35rem;
   padding-bottom: 0.25rem;
+  overflow: visible;
 }
 
 .page-red-title-text {
@@ -51,12 +56,15 @@
   text-align: center;
   font-size: 2rem; /* 32px — larger than the previous 26px */
   font-weight: 700;
-  line-height: 1.1;
+  line-height: 1.15;
   letter-spacing: 0.025em;
   color: #dc2626;
-  transform: scaleY(1.5);
-  transform-origin: center top;
-  padding-bottom: 0.35em;
+  transform: scaleY(1.35);
+  transform-origin: center bottom;
+  padding-bottom: 0.15em;
+  overflow: visible;
+  white-space: normal;
+  text-overflow: clip;
 }
 
 .page-red-title-line {
@@ -73,7 +81,7 @@
 .contract-prose-editor :is(em, i),
 .contract-prose-preview :is(em, i) {
   font-family: var(--font-doc-body-italic);
-  font-style: italic;
+  font-style: normal;
   font-synthesis: none;
 }
 

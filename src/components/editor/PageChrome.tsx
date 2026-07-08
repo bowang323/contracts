@@ -58,7 +58,7 @@ export function PageChrome({ format, pageNumber, position }: PageChromeProps) {
   if (showRedTitle) {
     return (
       <div className="page-red-title shrink-0 pb-1">
-        <p className="page-red-title-text truncate">
+        <p className="page-red-title-text">
           {normalized.redTitle.text}
         </p>
         <div className="page-red-title-line" />
